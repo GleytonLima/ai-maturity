@@ -1,0 +1,105 @@
+{
+  "version": "v1",
+  "title": "Framework compacto de maturidade de IA no SDLC",
+  "weights": {
+    "D1": 1,
+    "D2": 1.1,
+    "D3": 1.3,
+    "D4": 1.5,
+    "D5": 1.1,
+    "D6": 1,
+    "D7": 1.2
+  },
+  "scale": {
+    "min": 0,
+    "max": 4,
+    "labels": {
+      "0": "Inexistente ou proibido",
+      "1": "Ad-hoc e isolado",
+      "2": "Parcial",
+      "3": "Padronizado com evidencia",
+      "4": "Medido e otimizado"
+    }
+  },
+  "scoring": {
+    "question": "score direto de 0 a 4",
+    "capability": "media simples de 3 perguntas",
+    "dimension": "media simples de 2 capacidades",
+    "overall": "media ponderada das 7 dimensoes"
+  },
+  "levelThresholds": [
+    {
+      "min": 0,
+      "max": 0.9,
+      "level": "N1",
+      "label": "Ad-hoc"
+    },
+    {
+      "min": 1,
+      "max": 1.9,
+      "level": "N2",
+      "label": "Assistido"
+    },
+    {
+      "min": 2,
+      "max": 2.9,
+      "level": "N3",
+      "label": "Padronizado"
+    },
+    {
+      "min": 3,
+      "max": 3.6,
+      "level": "N4",
+      "label": "Otimizado"
+    },
+    {
+      "min": 3.7,
+      "max": 4,
+      "level": "N5",
+      "label": "IA-nativo"
+    }
+  ],
+  "gating": {
+    "maxLevelIfBelow": [
+      {
+        "dimensionCode": "D3",
+        "threshold": 2,
+        "level": "N2",
+        "reason": "Qualidade abaixo do minimo para escalar o uso de IA."
+      },
+      {
+        "dimensionCode": "D4",
+        "threshold": 2,
+        "level": "N2",
+        "reason": "Seguranca abaixo do minimo para escalar o uso de IA."
+      }
+    ],
+    "requiredForAdvancedLevels": [
+      {
+        "dimensionCode": "D3",
+        "threshold": 3
+      },
+      {
+        "dimensionCode": "D4",
+        "threshold": 3
+      },
+      {
+        "dimensionCode": "D7",
+        "threshold": 2.5
+      }
+    ]
+  },
+  "alerts": {
+    "structuralRisk": [
+      "Q19",
+      "Q20",
+      "Q22",
+      "Q23"
+    ],
+    "qualityRisk": [
+      "Q13",
+      "Q14",
+      "Q16"
+    ]
+  }
+}

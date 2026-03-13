@@ -1,0 +1,133 @@
+.page-shell {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.nav-row {
+  margin-bottom: 16px;
+}
+
+.header-layout {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+}
+
+.header-copy,
+.toolbar-actions,
+.inline-metrics,
+.action-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.header-copy {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.nav-row {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.content-stack,
+.content-column {
+  display: grid;
+  gap: 16px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.full-span {
+  grid-column: 1 / -1;
+  width: 100%;
+}
+
+.score-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 8px;
+}
+
+:host ::ng-deep .score-group {
+  border: 0;
+}
+
+:host ::ng-deep .score-group .mat-button-toggle {
+  border: 1px solid var(--mat-standard-button-toggle-divider-color, rgba(0, 0, 0, 0.12));
+}
+
+:host ::ng-deep .score-group .mat-button-toggle-label-content {
+  white-space: normal;
+  line-height: 1.25;
+  padding: 10px 12px;
+  text-align: left;
+}
+
+.result-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.table-toolbar,
+.table-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.full-width-table {
+  width: 100%;
+}
+
+.result-row,
+.split-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+}
+
+.content-stack-tight {
+  gap: 8px;
+}
+
+.comparison-row {
+  align-items: flex-start;
+}
+
+@media (max-width: 720px) {
+  .form-grid,
+  .score-group {
+    grid-template-columns: 1fr;
+  }
+
+  .header-layout,
+  .result-row,
+  .split-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .table-toolbar,
+  .table-actions {
+    align-items: stretch;
+  }
+}

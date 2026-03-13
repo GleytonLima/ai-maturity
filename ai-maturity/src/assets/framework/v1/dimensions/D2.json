@@ -1,0 +1,43 @@
+{
+  "code": "D2",
+  "title": "Integracao no fluxo",
+  "weight": 1.1,
+  "capacities": [
+    {
+      "code": "D2C1",
+      "title": "Integracao com toolchain",
+      "questions": [
+        {
+          "code": "Q7",
+          "prompt": "A IA esta integrada ao IDE ou ambiente principal de desenvolvimento de forma recorrente?"
+        },
+        {
+          "code": "Q8",
+          "prompt": "A IA esta integrada ao fluxo de PR, code review, backlog, issue tracking ou wiki?"
+        },
+        {
+          "code": "Q9",
+          "prompt": "A IA esta integrada ao pipeline de CI/CD, automacoes de qualidade ou gates tecnicos?"
+        }
+      ]
+    },
+    {
+      "code": "D2C2",
+      "title": "Automacao e agentes",
+      "questions": [
+        {
+          "code": "Q10",
+          "prompt": "A squad possui playbooks, biblioteca de prompts, templates ou padroes reutilizaveis para uso de IA?"
+        },
+        {
+          "code": "Q11",
+          "prompt": "A squad utiliza automacoes com IA no fluxo de trabalho, alem de uso manual em chat?"
+        },
+        {
+          "code": "Q12",
+          "prompt": "A squad utiliza agentes ou assistentes com autonomia delimitada e supervisao humana?"
+        }
+      ]
+    }
+  ]
+}

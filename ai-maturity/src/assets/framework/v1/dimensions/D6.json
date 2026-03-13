@@ -1,0 +1,43 @@
+{
+  "code": "D6",
+  "title": "Pessoas e cultura",
+  "weight": 1,
+  "capacities": [
+    {
+      "code": "D6C1",
+      "title": "Habilidades e confianca",
+      "questions": [
+        {
+          "code": "Q31",
+          "prompt": "A squad recebeu treinamento minimo sobre como usar IA, avaliar respostas e reconhecer limites e riscos?"
+        },
+        {
+          "code": "Q32",
+          "prompt": "O uso de IA esta distribuido no time, em vez de concentrado em poucos power users?"
+        },
+        {
+          "code": "Q33",
+          "prompt": "A squad sabe explicitar quando nao usar IA ou quando exigir revisao reforcada?"
+        }
+      ]
+    },
+    {
+      "code": "D6C2",
+      "title": "Colaboracao e aprendizado",
+      "questions": [
+        {
+          "code": "Q34",
+          "prompt": "O time compartilha boas praticas, prompts, exemplos, aprendizados e padroes de uso de IA?"
+        },
+        {
+          "code": "Q35",
+          "prompt": "A lideranca e o ambiente da squad favorecem experimentacao segura, com clareza e seguranca psicologica?"
+        },
+        {
+          "code": "Q36",
+          "prompt": "A squad realiza retrospectivas, revisoes ou ciclos de aprendizado especificos sobre uso de IA?"
+        }
+      ]
+    }
+  ]
+}

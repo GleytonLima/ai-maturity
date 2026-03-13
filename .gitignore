@@ -1,0 +1,5 @@
+.codex/
+ai-maturity/node_modules/
+ai-maturity/dist/
+ai-maturity/.angular/
+*.log

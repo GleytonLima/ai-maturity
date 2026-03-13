@@ -1,0 +1,43 @@
+{
+  "code": "D4",
+  "title": "Seguranca, privacidade, IP e compliance",
+  "weight": 1.5,
+  "capacities": [
+    {
+      "code": "D4C1",
+      "title": "Governanca e politica",
+      "questions": [
+        {
+          "code": "Q19",
+          "prompt": "Existe politica clara sobre ferramentas de IA permitidas, usos proibidos e tipos de dados restritos?"
+        },
+        {
+          "code": "Q20",
+          "prompt": "A squad entende e aplica regras sobre privacidade, segredos, dados sensiveis e vazamento de informacao?"
+        },
+        {
+          "code": "Q21",
+          "prompt": "A squad considera riscos de IP, licenciamento, direitos autorais e origem do conteudo gerado por IA?"
+        }
+      ]
+    },
+    {
+      "code": "D4C2",
+      "title": "Controles de risco no fluxo",
+      "questions": [
+        {
+          "code": "Q22",
+          "prompt": "Existe trilha de auditoria ou registro minimo do uso de IA em artefatos relevantes?"
+        },
+        {
+          "code": "Q23",
+          "prompt": "A squad incorpora riscos de IA no threat modeling, incluindo prompt injection, overreliance e supply chain?"
+        },
+        {
+          "code": "Q24",
+          "prompt": "Existem controles operacionais ou tecnicos para prevenir uso inseguro de IA no fluxo de desenvolvimento?"
+        }
+      ]
+    }
+  ]
+}

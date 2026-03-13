@@ -1,0 +1,43 @@
+{
+  "code": "D1",
+  "title": "Cobertura do SDLC",
+  "weight": 1,
+  "capacities": [
+    {
+      "code": "D1C1",
+      "title": "Uso pre-codigo",
+      "questions": [
+        {
+          "code": "Q1",
+          "prompt": "A squad usa IA em discovery, pesquisa, ideacao ou entendimento do problema?"
+        },
+        {
+          "code": "Q2",
+          "prompt": "A squad usa IA para refinar requisitos, criterios de aceitacao ou reduzir ambiguidades?"
+        },
+        {
+          "code": "Q3",
+          "prompt": "A squad usa IA para apoiar design e decisoes de arquitetura, incluindo alternativas e trade-offs?"
+        }
+      ]
+    },
+    {
+      "code": "D1C2",
+      "title": "Uso em delivery e run",
+      "questions": [
+        {
+          "code": "Q4",
+          "prompt": "A squad usa IA para geracao, manutencao, priorizacao ou analise de testes e QA?"
+        },
+        {
+          "code": "Q5",
+          "prompt": "A squad usa IA em documentacao tecnica, documentacao de release ou artefatos operacionais?"
+        },
+        {
+          "code": "Q6",
+          "prompt": "A squad usa IA em operacao, observabilidade, incidentes, troubleshooting ou runbooks?"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "code": "D5",
+  "title": "Dados e conhecimento acessiveis a IA",
+  "weight": 1.1,
+  "capacities": [
+    {
+      "code": "D5C1",
+      "title": "Conhecimento encontravel",
+      "questions": [
+        {
+          "code": "Q25",
+          "prompt": "A documentacao e o conhecimento interno sao encontraveis, atualizados e uteis para humanos e IA?"
+        },
+        {
+          "code": "Q26",
+          "prompt": "A squad documenta decisoes importantes de forma que o conhecimento possa ser reutilizado posteriormente?"
+        },
+        {
+          "code": "Q27",
+          "prompt": "A squad consegue responder duvidas tecnicas relevantes com rapidez usando base interna e contexto confiavel?"
+        }
+      ]
+    },
+    {
+      "code": "D5C2",
+      "title": "Contexto seguro para IA",
+      "questions": [
+        {
+          "code": "Q28",
+          "prompt": "A squad oferece a IA acesso a contexto interno seguro, como docs, codigo, padroes e historico relevante?"
+        },
+        {
+          "code": "Q29",
+          "prompt": "Esse acesso a contexto interno possui controle de acesso, rastreabilidade e protecao adequada?"
+        },
+        {
+          "code": "Q30",
+          "prompt": "A qualidade, atualizacao e ownership dos dados e conhecimento sao tratadas como fundamento para uso eficaz da IA?"
+        }
+      ]
+    }
+  ]
+}
