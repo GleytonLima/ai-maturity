@@ -18,6 +18,11 @@
   margin-left: 0;
 }
 
+.score-group .mat-button-toggle-button {
+  width: 100%;
+  height: 100%;
+}
+
 .score-group .mat-button-toggle:first-child {
   border-left: 1px solid var(--mat-standard-button-toggle-divider-color, rgba(0, 0, 0, 0.12));
 }
