@@ -487,11 +487,18 @@
             @if (assessmentFormStep() === 'questions') {
               <mat-accordion multi>
                 @for (dimension of catalog().dimensions; track dimension.code) {
+                  @let dimCompletion = getDimensionCompletion(dimension);
                   <mat-expansion-panel>
                     <mat-expansion-panel-header>
                       <mat-panel-title>{{ dimension.code }} - {{ dimension.title }}</mat-panel-title>
                       <mat-panel-description>
-                        Peso {{ dimension.weight | number: '1.1-1' }}
+                        <span class="panel-meta">Peso {{ dimension.weight | number: '1.1-1' }}</span>
+                        <span
+                          class="completion-badge"
+                          [ngStyle]="getCompletionBadgeStyle(dimCompletion.percent)"
+                        >
+                          {{ dimCompletion.answered }}/{{ dimCompletion.total }} ({{ dimCompletion.percent }}%)
+                        </span>
                       </mat-panel-description>
                     </mat-expansion-panel-header>
 

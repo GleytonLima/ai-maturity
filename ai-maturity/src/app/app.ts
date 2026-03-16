@@ -27,6 +27,7 @@ import type {
   AssessmentResult,
   AssessmentViewModel,
   FrameworkCatalog,
+  FrameworkDimension,
   Team,
   Tool,
   ToolStatus
@@ -569,6 +570,28 @@ export class App {
 
   protected getAssessmentCountForTeam(teamId: string): number {
     return this.repository.getAssessmentsForTeam(teamId).length;
+  }
+
+  protected getDimensionCompletion(dimension: FrameworkDimension): {
+    answered: number;
+    total: number;
+    percent: number;
+  } {
+    const questions = dimension.capacities.flatMap((c) => c.questions);
+    const total = questions.length;
+    const answered = questions.filter(
+      (q) => this.draft().responses[q.code]?.score != null
+    ).length;
+    const percent = total ? Math.round((answered / total) * 100) : 0;
+    return { answered, total, percent };
+  }
+
+  protected getCompletionBadgeStyle(percent: number): Record<string, string> {
+    const hue = (percent / 100) * 120;
+    return {
+      background: `hsl(${hue}, 75%, 92%)`,
+      color: `hsl(${hue}, 55%, 25%)`
+    };
   }
 
   protected getToolUsageCount(toolId: string): number {

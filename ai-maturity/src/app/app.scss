@@ -124,6 +124,18 @@
   gap: 6px;
 }
 
+.panel-meta {
+  margin-right: 8px;
+}
+
+.completion-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
 .comparison-row {
   align-items: flex-start;
 }
