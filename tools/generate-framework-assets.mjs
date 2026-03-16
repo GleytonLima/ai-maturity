@@ -253,7 +253,7 @@ const questions = [
     capacityTitle: 'Controles de risco no fluxo',
     code: 'Q23',
     prompt:
-      'A squad incorpora riscos de IA no threat modeling, incluindo prompt injection, overreliance e supply chain?'
+      'A squad incorpora riscos de IA no threat modeling do produto e/ou do fluxo de engenharia (quando aplicavel), incluindo prompt injection, overreliance e supply chain?'
   },
   {
     dimensionCode: 'D4',

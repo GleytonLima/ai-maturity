@@ -206,7 +206,7 @@ Existe **trilha de auditoria** ou registro mínimo do uso de IA em artefatos rel
 
 ### Q25
 
-A squad incorpora riscos de IA no **threat modeling**, incluindo prompt injection, overreliance e supply chain?
+A squad incorpora riscos de IA no **threat modeling** do produto e/ou do fluxo de engenharia (quando aplicável), incluindo prompt injection, overreliance e supply chain?
 
 > 💡 **Exemplo:** O threat model do serviço inclui cenários como "prompt injection via input do usuário" e "dependência de modelo externo indisponível".
 

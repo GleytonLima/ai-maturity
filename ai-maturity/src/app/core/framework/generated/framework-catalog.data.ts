@@ -82,6 +82,55 @@ export const FRAMEWORK_CATALOG: FrameworkCatalog = {
             "4": "Alem de aplicada, a politica e revisada com recorrencia e ajustada com base em incidentes, dados ou mudancas."
           }
         },
+        "risk_modeling_maturity": {
+          "labels": {
+            "0": "Nao considera riscos de IA",
+            "1": "Considera de forma ad-hoc",
+            "2": "Cobre riscos parciais",
+            "3": "Cobre riscos de forma padronizada",
+            "4": "Cobre e evolui continuamente com evidencias"
+          },
+          "hints": {
+            "0": "O threat modeling nao contempla riscos de IA no produto nem no fluxo de engenharia.",
+            "1": "Alguns riscos de IA sao discutidos pontualmente, sem metodo ou checklist definido.",
+            "2": "O time cobre parte dos riscos relevantes, mas com lacunas de escopo ou consistencia.",
+            "3": "Ha processo padronizado para incluir riscos de IA aplicaveis no threat modeling, com registro de decisoes.",
+            "4": "A cobertura e revisada continuamente com base em incidentes, mudancas de arquitetura e novos vetores de risco."
+          }
+        },
+        "operational_controls_maturity": {
+          "labels": {
+            "0": "Sem controles operacionais",
+            "1": "Controles pontuais e reativos",
+            "2": "Controles parciais, com lacunas",
+            "3": "Controles padronizados no fluxo",
+            "4": "Controles padronizados com melhoria continua"
+          },
+          "hints": {
+            "0": "Nao existem bloqueios, validacoes ou mecanismos operacionais para prevenir uso inseguro de IA no fluxo.",
+            "1": "Existem controles isolados apos problemas, sem cobertura consistente do ciclo de desenvolvimento.",
+            "2": "Ha controles em partes do fluxo, mas ainda existem lacunas importantes de cobertura ou enforce.",
+            "3": "Os controles tecnicos e operacionais estao integrados ao fluxo e sao aplicados de forma consistente.",
+            "4": "A cobertura dos controles e monitorada, auditada e aprimorada continuamente com base em incidentes e dados."
+          }
+        },
+        "knowledge_response_effectiveness": {
+          "labels": {
+            "0": "Nao consegue responder com base interna",
+            "1": "Responde raramente, com lentidao ou baixa confianca",
+            "2": "Responde parcialmente, com inconsistencias",
+            "3": "Responde com rapidez e confianca na maioria dos casos",
+            "4": "Responde com rapidez alta, confianca e melhoria continua"
+          },
+          "hints": {
+            "0": "A squad nao consegue obter respostas tecnicas relevantes a partir de conhecimento interno disponivel.",
+            "1": "As respostas dependem de poucas pessoas ou demoram, com confiabilidade instavel.",
+            "2": "Ha capacidade de resposta em parte dos temas, mas com lacunas de cobertura ou qualidade.",
+            "3": "Na maior parte dos casos, a squad encontra respostas tecnicas rapidamente com base interna confiavel.",
+            "4": "A resposta tecnica e rapida, confiavel e continuamente melhorada com feedback sobre qualidade e tempo."
+          }
+        },
+
         "measurement_capability": {
           "labels": {
             "0": "Nao mede",
@@ -444,15 +493,15 @@ export const FRAMEWORK_CATALOG: FrameworkCatalog = {
             },
             {
               "code": "Q25",
-              "prompt": "A squad incorpora riscos de IA no threat modeling, incluindo prompt injection, overreliance e supply chain?",
+              "prompt": "A squad incorpora riscos de IA no threat modeling do produto e/ou do fluxo de engenharia (quando aplicavel), incluindo prompt injection, overreliance e supply chain?",
               "hint": "O threat model do servico inclui cenarios como 'prompt injection via input do usuario' e 'dependencia de modelo externo indisponivel'.",
-              "scoreProfile": "governance_policy"
+              "scoreProfile": "risk_modeling_maturity"
             },
             {
               "code": "Q26",
               "prompt": "Existem controles operacionais ou tecnicos para prevenir uso inseguro de IA no fluxo de desenvolvimento?",
               "hint": "Ha uma regra no proxy/gateway que impede envio de codigo para APIs de IA nao homologadas; o linter bloqueia padroes de codigo inseguro gerado por IA.",
-              "scoreProfile": "governance_policy"
+              "scoreProfile": "operational_controls_maturity"
             }
           ]
         }
@@ -481,7 +530,8 @@ export const FRAMEWORK_CATALOG: FrameworkCatalog = {
             {
               "code": "Q29",
               "prompt": "A squad consegue responder duvidas tecnicas relevantes com rapidez usando base interna e contexto confiavel?",
-              "hint": "Um dev novo consegue descobrir como funciona o fluxo de pagamento em menos de 1 hora consultando docs internas ou perguntando ao assistente de IA com contexto do repo."
+              "hint": "Um dev novo consegue descobrir como funciona o fluxo de pagamento em menos de 1 hora consultando docs internas ou perguntando ao assistente de IA com contexto do repo.",
+              "scoreProfile": "knowledge_response_effectiveness"
             }
           ]
         },
@@ -602,7 +652,8 @@ export const FRAMEWORK_CATALOG: FrameworkCatalog = {
             {
               "code": "Q43",
               "prompt": "A squad usa essas metricas para priorizar onde expandir, limitar ou ajustar o uso de IA?",
-              "hint": "Apos ver que IA em testes gerou boa cobertura mas em docs gerou conteudo de baixa qualidade, a squad decidiu investir mais em testes e ajustar o processo de docs."
+              "hint": "Apos ver que IA em testes gerou boa cobertura mas em docs gerou conteudo de baixa qualidade, a squad decidiu investir mais em testes e ajustar o processo de docs.",
+              "scoreProfile": "measurement_capability"
             },
             {
               "code": "Q44",

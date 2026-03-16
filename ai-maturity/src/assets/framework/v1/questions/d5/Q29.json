@@ -2,6 +2,7 @@
   "code": "Q29",
   "prompt": "A squad consegue responder duvidas tecnicas relevantes com rapidez usando base interna e contexto confiavel?",
   "hint": "Um dev novo consegue descobrir como funciona o fluxo de pagamento em menos de 1 hora consultando docs internas ou perguntando ao assistente de IA com contexto do repo.",
+  "scoreProfile": "knowledge_response_effectiveness",
   "dimensionCode": "D5",
   "capacityCode": "D5C1"
 }

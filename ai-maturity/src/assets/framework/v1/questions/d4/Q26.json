@@ -2,7 +2,7 @@
   "code": "Q26",
   "prompt": "Existem controles operacionais ou tecnicos para prevenir uso inseguro de IA no fluxo de desenvolvimento?",
   "hint": "Ha uma regra no proxy/gateway que impede envio de codigo para APIs de IA nao homologadas; o linter bloqueia padroes de codigo inseguro gerado por IA.",
-  "scoreProfile": "governance_policy",
+  "scoreProfile": "operational_controls_maturity",
   "dimensionCode": "D4",
   "capacityCode": "D4C2"
 }
