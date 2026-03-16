@@ -334,6 +334,33 @@ export class App {
     }
     return rows;
   });
+  protected readonly questionRowsSort = signal<{
+    active: 'dimension' | 'code' | 'prompt' | 'score';
+    direction: 'asc' | 'desc';
+  }>({ active: 'code', direction: 'asc' });
+  protected readonly sortedResultDetailQuestionRows = computed(() => {
+    const rows = [...this.resultDetailQuestionRows()];
+    const sort = this.questionRowsSort();
+    const dir = sort.direction === 'asc' ? 1 : -1;
+    return rows.sort((a, b) => {
+      if (sort.active === 'score') {
+        const va = a.response?.score ?? -1;
+        const vb = b.response?.score ?? -1;
+        return (va - vb) * dir;
+      }
+      if (sort.active === 'dimension') {
+        const cmp = a.dimensionCode.localeCompare(b.dimensionCode) || a.question.code.localeCompare(b.question.code);
+        return cmp * dir;
+      }
+      if (sort.active === 'code') {
+        return a.question.code.localeCompare(b.question.code) * dir;
+      }
+      if (sort.active === 'prompt') {
+        return a.question.prompt.localeCompare(b.question.prompt) * dir;
+      }
+      return 0;
+    });
+  });
   protected readonly unansweredCount = computed(() => {
     const catalog = this.catalog();
     return this.getAllQuestions(catalog).filter((question) => {
@@ -738,6 +765,17 @@ export class App {
     return this.tools().find((tool) => tool.id === toolId)?.name ?? 'Ferramenta removida';
   }
 
+  protected getQuestionPrompt(questionCode: string): string {
+    const catalog = this.catalog();
+    for (const dimension of catalog.dimensions) {
+      for (const capacity of dimension.capacities) {
+        const question = capacity.questions.find((q) => q.code === questionCode);
+        if (question) return question.prompt;
+      }
+    }
+    return questionCode;
+  }
+
   protected getToolOptionLabel(tool: Tool): string {
     return tool.vendor ? `${tool.name} - ${tool.vendor}` : tool.name;
   }
@@ -868,6 +906,12 @@ export class App {
     this.resultsSort.set({ active, direction });
   }
 
+  protected onQuestionRowsSortChange(sort: Sort): void {
+    const active = (sort.active || 'code') as 'dimension' | 'code' | 'prompt' | 'score';
+    const direction = (sort.direction || 'asc') as 'asc' | 'desc';
+    this.questionRowsSort.set({ active, direction });
+  }
+
   protected backToAssessmentList(): void {
     this.assessmentViewMode.set('list');
   }
@@ -877,6 +921,7 @@ export class App {
     this.selectedResultAssessmentId.set(null);
     this.resultDetailSearch.set('');
     this.resultDetailDimensionFilter.set('');
+    this.questionRowsSort.set({ active: 'code', direction: 'asc' });
   }
 
   protected getScoreLabel(question: FrameworkQuestion, score: number | null): string {

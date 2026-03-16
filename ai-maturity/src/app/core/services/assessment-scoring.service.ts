@@ -124,9 +124,14 @@ export class AssessmentScoringService {
       }
     }
 
-    return (
-      thresholds.find((threshold) => score >= threshold.min && score <= threshold.max) ??
-      thresholds[thresholds.length - 1]
+    const match = thresholds.find(
+      (threshold) => score >= threshold.min && score <= threshold.max
     );
+    if (match) return match;
+
+    // Scores em lacuna entre faixas (ex.: 0,96 entre N1 max 0,9 e N2 min 1): usar o nível cujo min <= score (maior min que não ultrapassa o score).
+    const sorted = [...thresholds].sort((a, b) => a.min - b.min);
+    const fallback = sorted.filter((t) => t.min <= score).pop();
+    return fallback ?? sorted[0];
   }
 }
