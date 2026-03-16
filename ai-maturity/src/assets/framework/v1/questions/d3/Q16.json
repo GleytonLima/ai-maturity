@@ -2,6 +2,7 @@
   "code": "Q16",
   "prompt": "Mudancas geradas com IA passam por testes automatizados, validacoes e gates confiaveis?",
   "hint": "Todo PR, independente de ser humano ou IA, precisa passar pela suite de testes, linter e SAST antes de ser mergeado.",
+  "scoreProfile": "governance_policy",
   "dimensionCode": "D3",
   "capacityCode": "D3C1"
 }

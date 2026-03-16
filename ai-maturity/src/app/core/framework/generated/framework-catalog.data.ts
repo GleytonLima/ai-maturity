@@ -65,6 +65,54 @@ export const FRAMEWORK_CATALOG: FrameworkCatalog = {
             "3": "Na maior parte dos casos, o uso de IA nao aumentou retrabalho, defeitos ou instabilidade.",
             "4": "Houve melhoria consistente e comprovada em retrabalho, qualidade ou estabilidade."
           }
+        },
+        "governance_policy": {
+          "labels": {
+            "0": "Nao existe politica/controle",
+            "1": "Existe informalmente",
+            "2": "Documentada, mas inconsistente",
+            "3": "Documentada, conhecida e aplicada",
+            "4": "Revisada periodicamente com base em dados"
+          },
+          "hints": {
+            "0": "Nao ha nenhuma diretriz formal ou informal sobre esse tema.",
+            "1": "Ha orientacoes esparsas ou verbais, mas nao estao documentadas nem amplamente divulgadas.",
+            "2": "A politica ou controle existe e esta acessivel, mas nem todos conhecem ou aplicam de forma consistente.",
+            "3": "O time conhece, segue e consegue citar a politica ou controle quando necessario, com evidencias.",
+            "4": "Alem de aplicada, a politica e revisada com recorrencia e ajustada com base em incidentes, dados ou mudancas."
+          }
+        },
+        "measurement_capability": {
+          "labels": {
+            "0": "Nao mede",
+            "1": "Medicao pontual ou informal",
+            "2": "Mede parcialmente, sem regularidade",
+            "3": "Mede de forma consistente e confiavel",
+            "4": "Mede, analisa tendencias e age com base nos dados"
+          },
+          "hints": {
+            "0": "Nao ha nenhuma medicao, nem informal, sobre esse aspecto.",
+            "1": "Alguem olha eventualmente, mas nao ha processo nem ferramenta dedicada.",
+            "2": "Ha dados disponiveis, mas a medicao nao e regular nem abrangente.",
+            "3": "O time mede de forma recorrente com dados confiaveis e visibilidade para a squad.",
+            "4": "Os dados sao analisados, geram insights e orientam decisoes de melhoria continua."
+          }
+        },
+        "resource_availability": {
+          "labels": {
+            "0": "Nao existe",
+            "1": "Existe de forma rudimentar",
+            "2": "Existe, mas com lacunas",
+            "3": "Acessivel e bem mantido",
+            "4": "Tratado como produto, com evolucao continua"
+          },
+          "hints": {
+            "0": "O recurso, ferramenta ou infraestrutura nao existe.",
+            "1": "Existe algo basico, mas e rudimentar, incompleto ou pouco acessivel.",
+            "2": "Existe e e utilizado, mas tem lacunas significativas em qualidade, cobertura ou acesso.",
+            "3": "Acessivel, bem mantido e cobre as necessidades principais do time.",
+            "4": "Tratado como produto com ownership claro, SLA de qualidade e evolucao continua baseada em feedback."
+          }
         }
       }
     },
@@ -272,7 +320,8 @@ export const FRAMEWORK_CATALOG: FrameworkCatalog = {
             {
               "code": "Q11",
               "prompt": "A squad tem acesso a uma plataforma interna de qualidade que oferece caminhos padronizados, seguros e automatizados para escalar o uso de IA na organizacao?",
-              "hint": "A empresa oferece um portal/plataforma interna com templates de projeto, APIs aprovadas, guardrails de seguranca e integracoes de IA ja homologadas."
+              "hint": "A empresa oferece um portal/plataforma interna com templates de projeto, APIs aprovadas, guardrails de seguranca e integracoes de IA ja homologadas.",
+              "scoreProfile": "resource_availability"
             }
           ]
         },
@@ -283,7 +332,8 @@ export const FRAMEWORK_CATALOG: FrameworkCatalog = {
             {
               "code": "Q12",
               "prompt": "A squad possui playbooks, biblioteca de prompts, templates ou padroes reutilizaveis para uso de IA?",
-              "hint": "Existe um repositorio Git com prompts versionados por tipo de tarefa (ex.: gerar testes, revisar ADR, resumir incidente)."
+              "hint": "Existe um repositorio Git com prompts versionados por tipo de tarefa (ex.: gerar testes, revisar ADR, resumir incidente).",
+              "scoreProfile": "resource_availability"
             },
             {
               "code": "Q13",
@@ -311,12 +361,14 @@ export const FRAMEWORK_CATALOG: FrameworkCatalog = {
             {
               "code": "Q15",
               "prompt": "Outputs gerados com IA passam por revisao humana explicita, com criterios adaptados para IA?",
-              "hint": "O checklist de PR inclui itens como 'Codigo gerado por IA foi revisado quanto a logica, seguranca e alinhamento com padroes do time?'"
+              "hint": "O checklist de PR inclui itens como 'Codigo gerado por IA foi revisado quanto a logica, seguranca e alinhamento com padroes do time?'",
+              "scoreProfile": "governance_policy"
             },
             {
               "code": "Q16",
               "prompt": "Mudancas geradas com IA passam por testes automatizados, validacoes e gates confiaveis?",
-              "hint": "Todo PR, independente de ser humano ou IA, precisa passar pela suite de testes, linter e SAST antes de ser mergeado."
+              "hint": "Todo PR, independente de ser humano ou IA, precisa passar pela suite de testes, linter e SAST antes de ser mergeado.",
+              "scoreProfile": "governance_policy"
             },
             {
               "code": "Q17",
@@ -333,7 +385,8 @@ export const FRAMEWORK_CATALOG: FrameworkCatalog = {
             {
               "code": "Q18",
               "prompt": "A squad controla o impacto da IA em complexidade, manutenibilidade e divida tecnica?",
-              "hint": "A squad roda analise de complexidade ciclomatica e monitora se o codigo gerado por IA esta aumentando a divida tecnica."
+              "hint": "A squad roda analise de complexidade ciclomatica e monitora se o codigo gerado por IA esta aumentando a divida tecnica.",
+              "scoreProfile": "outcome_stability"
             },
             {
               "code": "Q19",
@@ -343,7 +396,8 @@ export const FRAMEWORK_CATALOG: FrameworkCatalog = {
             {
               "code": "Q20",
               "prompt": "A squad monitora o comportamento de mudancas assistidas por IA apos merge ou deploy?",
-              "hint": "Apos deploy de codigo assistido por IA, a squad verifica metricas de erro e latencia nas primeiras horas, com alerta configurado."
+              "hint": "Apos deploy de codigo assistido por IA, a squad verifica metricas de erro e latencia nas primeiras horas, com alerta configurado.",
+              "scoreProfile": "measurement_capability"
             }
           ]
         }
@@ -361,17 +415,20 @@ export const FRAMEWORK_CATALOG: FrameworkCatalog = {
             {
               "code": "Q21",
               "prompt": "Existe politica clara sobre ferramentas de IA permitidas, usos proibidos e tipos de dados restritos?",
-              "hint": "A empresa publicou uma politica que lista ferramentas aprovadas (ex.: Copilot Enterprise), proibe uso de modelos publicos com codigo proprietario, e define dados PII como restritos."
+              "hint": "A empresa publicou uma politica que lista ferramentas aprovadas (ex.: Copilot Enterprise), proibe uso de modelos publicos com codigo proprietario, e define dados PII como restritos.",
+              "scoreProfile": "governance_policy"
             },
             {
               "code": "Q22",
               "prompt": "A squad entende e aplica regras sobre privacidade, segredos, dados sensiveis e vazamento de informacao?",
-              "hint": "Devs sabem que nao podem colar tokens, secrets ou dados de clientes em prompts; ha DLP configurado para bloquear isso."
+              "hint": "Devs sabem que nao podem colar tokens, secrets ou dados de clientes em prompts; ha DLP configurado para bloquear isso.",
+              "scoreProfile": "governance_policy"
             },
             {
               "code": "Q23",
               "prompt": "A squad considera riscos de IP, licenciamento, direitos autorais e origem do conteudo gerado por IA?",
-              "hint": "A squad verifica se codigo sugerido pela IA nao replica trechos de projetos com licencas restritivas (ex.: GPL em projeto MIT)."
+              "hint": "A squad verifica se codigo sugerido pela IA nao replica trechos de projetos com licencas restritivas (ex.: GPL em projeto MIT).",
+              "scoreProfile": "governance_policy"
             }
           ]
         },
@@ -382,17 +439,20 @@ export const FRAMEWORK_CATALOG: FrameworkCatalog = {
             {
               "code": "Q24",
               "prompt": "Existe trilha de auditoria ou registro minimo do uso de IA em artefatos relevantes?",
-              "hint": "PRs com assistencia de IA sao tagueados com label 'ai-assisted' e o template de PR tem campo obrigatorio 'IA utilizada: sim/nao'."
+              "hint": "PRs com assistencia de IA sao tagueados com label 'ai-assisted' e o template de PR tem campo obrigatorio 'IA utilizada: sim/nao'.",
+              "scoreProfile": "governance_policy"
             },
             {
               "code": "Q25",
               "prompt": "A squad incorpora riscos de IA no threat modeling, incluindo prompt injection, overreliance e supply chain?",
-              "hint": "O threat model do servico inclui cenarios como 'prompt injection via input do usuario' e 'dependencia de modelo externo indisponivel'."
+              "hint": "O threat model do servico inclui cenarios como 'prompt injection via input do usuario' e 'dependencia de modelo externo indisponivel'.",
+              "scoreProfile": "governance_policy"
             },
             {
               "code": "Q26",
               "prompt": "Existem controles operacionais ou tecnicos para prevenir uso inseguro de IA no fluxo de desenvolvimento?",
-              "hint": "Ha uma regra no proxy/gateway que impede envio de codigo para APIs de IA nao homologadas; o linter bloqueia padroes de codigo inseguro gerado por IA."
+              "hint": "Ha uma regra no proxy/gateway que impede envio de codigo para APIs de IA nao homologadas; o linter bloqueia padroes de codigo inseguro gerado por IA.",
+              "scoreProfile": "governance_policy"
             }
           ]
         }
@@ -410,7 +470,8 @@ export const FRAMEWORK_CATALOG: FrameworkCatalog = {
             {
               "code": "Q27",
               "prompt": "A documentacao e o conhecimento interno sao encontraveis, atualizados e uteis para humanos e IA?",
-              "hint": "A wiki do time e atualizada a cada sprint e aparece nos primeiros resultados ao buscar termos-chave no portal interno."
+              "hint": "A wiki do time e atualizada a cada sprint e aparece nos primeiros resultados ao buscar termos-chave no portal interno.",
+              "scoreProfile": "resource_availability"
             },
             {
               "code": "Q28",
@@ -431,17 +492,20 @@ export const FRAMEWORK_CATALOG: FrameworkCatalog = {
             {
               "code": "Q30",
               "prompt": "A squad oferece a IA acesso a contexto interno seguro, como docs, codigo, padroes e historico relevante?",
-              "hint": "O assistente de IA esta conectado ao repositorio e a wiki interna via RAG ou MCP, permitindo respostas contextualizadas sem expor dados externamente."
+              "hint": "O assistente de IA esta conectado ao repositorio e a wiki interna via RAG ou MCP, permitindo respostas contextualizadas sem expor dados externamente.",
+              "scoreProfile": "resource_availability"
             },
             {
               "code": "Q31",
               "prompt": "Esse acesso a contexto interno possui controle de acesso, rastreabilidade e protecao adequada?",
-              "hint": "O sistema de RAG respeita ACLs do repositorio; logs de consulta sao mantidos; dados sensiveis sao filtrados antes de chegar ao modelo."
+              "hint": "O sistema de RAG respeita ACLs do repositorio; logs de consulta sao mantidos; dados sensiveis sao filtrados antes de chegar ao modelo.",
+              "scoreProfile": "governance_policy"
             },
             {
               "code": "Q32",
               "prompt": "A qualidade, atualizacao e ownership dos dados e conhecimento sao tratadas como fundamento para uso eficaz da IA?",
-              "hint": "Existe um owner definido para cada area da documentacao, com SLA de atualizacao (ex.: docs de API revisadas a cada release)."
+              "hint": "Existe um owner definido para cada area da documentacao, com SLA de atualizacao (ex.: docs de API revisadas a cada release).",
+              "scoreProfile": "governance_policy"
             }
           ]
         }
@@ -508,17 +572,20 @@ export const FRAMEWORK_CATALOG: FrameworkCatalog = {
             {
               "code": "Q39",
               "prompt": "A squad mede adocao e intensidade de uso de IA por meio de telemetria ou dados objetivos?",
-              "hint": "A squad acompanha DAU do Copilot, taxa de aceitacao de sugestoes e volume de interacoes no chat do assistente."
+              "hint": "A squad acompanha DAU do Copilot, taxa de aceitacao de sugestoes e volume de interacoes no chat do assistente.",
+              "scoreProfile": "measurement_capability"
             },
             {
               "code": "Q40",
               "prompt": "A squad mede impacto em fluxo de engenharia, como review speed, lead time, throughput ou cycle time?",
-              "hint": "Um dashboard mostra que review time caiu de 48h para 24h apos adocao de bot de code review com IA."
+              "hint": "Um dashboard mostra que review time caiu de 48h para 24h apos adocao de bot de code review com IA.",
+              "scoreProfile": "measurement_capability"
             },
             {
               "code": "Q41",
               "prompt": "A squad mede impacto em qualidade e estabilidade, como defeitos, incidentes, retrabalho ou debt?",
-              "hint": "A squad compara taxa de bugs em producao antes e depois da adocao de IA e monitora se a complexidade do codigo esta sob controle."
+              "hint": "A squad compara taxa de bugs em producao antes e depois da adocao de IA e monitora se a complexidade do codigo esta sob controle.",
+              "scoreProfile": "measurement_capability"
             }
           ]
         },
@@ -529,7 +596,8 @@ export const FRAMEWORK_CATALOG: FrameworkCatalog = {
             {
               "code": "Q42",
               "prompt": "A squad compara percepcoes sobre ganho com IA com resultados observaveis, evitando metricas de vaidade?",
-              "hint": "Embora o time ache que esta mais rapido, a squad verifica com dados se o lead time e a taxa de defeitos realmente melhoraram."
+              "hint": "Embora o time ache que esta mais rapido, a squad verifica com dados se o lead time e a taxa de defeitos realmente melhoraram.",
+              "scoreProfile": "measurement_capability"
             },
             {
               "code": "Q43",

@@ -2,6 +2,7 @@
   "code": "Q12",
   "prompt": "A squad possui playbooks, biblioteca de prompts, templates ou padroes reutilizaveis para uso de IA?",
   "hint": "Existe um repositorio Git com prompts versionados por tipo de tarefa (ex.: gerar testes, revisar ADR, resumir incidente).",
+  "scoreProfile": "resource_availability",
   "dimensionCode": "D2",
   "capacityCode": "D2C2"
 }

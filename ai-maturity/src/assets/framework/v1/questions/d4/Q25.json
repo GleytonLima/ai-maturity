@@ -2,6 +2,7 @@
   "code": "Q25",
   "prompt": "A squad incorpora riscos de IA no threat modeling, incluindo prompt injection, overreliance e supply chain?",
   "hint": "O threat model do servico inclui cenarios como 'prompt injection via input do usuario' e 'dependencia de modelo externo indisponivel'.",
+  "scoreProfile": "governance_policy",
   "dimensionCode": "D4",
   "capacityCode": "D4C2"
 }

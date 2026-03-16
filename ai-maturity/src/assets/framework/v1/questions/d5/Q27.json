@@ -2,6 +2,7 @@
   "code": "Q27",
   "prompt": "A documentacao e o conhecimento interno sao encontraveis, atualizados e uteis para humanos e IA?",
   "hint": "A wiki do time e atualizada a cada sprint e aparece nos primeiros resultados ao buscar termos-chave no portal interno.",
+  "scoreProfile": "resource_availability",
   "dimensionCode": "D5",
   "capacityCode": "D5C1"
 }

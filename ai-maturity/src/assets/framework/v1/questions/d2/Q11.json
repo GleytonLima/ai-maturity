@@ -2,6 +2,7 @@
   "code": "Q11",
   "prompt": "A squad tem acesso a uma plataforma interna de qualidade que oferece caminhos padronizados, seguros e automatizados para escalar o uso de IA na organizacao?",
   "hint": "A empresa oferece um portal/plataforma interna com templates de projeto, APIs aprovadas, guardrails de seguranca e integracoes de IA ja homologadas.",
+  "scoreProfile": "resource_availability",
   "dimensionCode": "D2",
   "capacityCode": "D2C1"
 }

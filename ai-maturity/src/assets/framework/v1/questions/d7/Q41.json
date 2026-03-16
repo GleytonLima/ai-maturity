@@ -2,6 +2,7 @@
   "code": "Q41",
   "prompt": "A squad mede impacto em qualidade e estabilidade, como defeitos, incidentes, retrabalho ou debt?",
   "hint": "A squad compara taxa de bugs em producao antes e depois da adocao de IA e monitora se a complexidade do codigo esta sob controle.",
+  "scoreProfile": "measurement_capability",
   "dimensionCode": "D7",
   "capacityCode": "D7C1"
 }

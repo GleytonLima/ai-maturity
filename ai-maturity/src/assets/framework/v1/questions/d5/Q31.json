@@ -2,6 +2,7 @@
   "code": "Q31",
   "prompt": "Esse acesso a contexto interno possui controle de acesso, rastreabilidade e protecao adequada?",
   "hint": "O sistema de RAG respeita ACLs do repositorio; logs de consulta sao mantidos; dados sensiveis sao filtrados antes de chegar ao modelo.",
+  "scoreProfile": "governance_policy",
   "dimensionCode": "D5",
   "capacityCode": "D5C2"
 }

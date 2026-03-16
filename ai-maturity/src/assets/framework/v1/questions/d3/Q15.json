@@ -2,6 +2,7 @@
   "code": "Q15",
   "prompt": "Outputs gerados com IA passam por revisao humana explicita, com criterios adaptados para IA?",
   "hint": "O checklist de PR inclui itens como 'Codigo gerado por IA foi revisado quanto a logica, seguranca e alinhamento com padroes do time?'",
+  "scoreProfile": "governance_policy",
   "dimensionCode": "D3",
   "capacityCode": "D3C1"
 }

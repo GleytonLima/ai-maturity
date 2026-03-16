@@ -2,6 +2,7 @@
   "code": "Q18",
   "prompt": "A squad controla o impacto da IA em complexidade, manutenibilidade e divida tecnica?",
   "hint": "A squad roda analise de complexidade ciclomatica e monitora se o codigo gerado por IA esta aumentando a divida tecnica.",
+  "scoreProfile": "outcome_stability",
   "dimensionCode": "D3",
   "capacityCode": "D3C2"
 }

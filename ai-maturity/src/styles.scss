@@ -3,12 +3,17 @@
 .score-group.mat-button-toggle-group {
   border: none;
   gap: 8px;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: stretch;
 }
 
 .score-group .mat-button-toggle {
   border: 1px solid var(--mat-standard-button-toggle-divider-color, rgba(0, 0, 0, 0.12));
   border-radius: 8px;
   overflow: hidden;
+  min-height: 52px;
+  flex: 1;
 }
 
 .score-group .mat-button-toggle-checked {
@@ -18,9 +23,14 @@
 
 .score-group .mat-button-toggle-label-content {
   white-space: normal;
-  line-height: 1.25;
-  padding: 10px 12px;
-  text-align: left;
+  line-height: 1.2;
+  padding: 8px 10px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+  box-sizing: border-box;
 }
 
 .hint-tooltip .mdc-tooltip__surface {

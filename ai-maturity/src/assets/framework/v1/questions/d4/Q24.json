@@ -2,6 +2,7 @@
   "code": "Q24",
   "prompt": "Existe trilha de auditoria ou registro minimo do uso de IA em artefatos relevantes?",
   "hint": "PRs com assistencia de IA sao tagueados com label 'ai-assisted' e o template de PR tem campo obrigatorio 'IA utilizada: sim/nao'.",
+  "scoreProfile": "governance_policy",
   "dimensionCode": "D4",
   "capacityCode": "D4C2"
 }

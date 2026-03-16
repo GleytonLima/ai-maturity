@@ -2,6 +2,7 @@
   "code": "Q21",
   "prompt": "Existe politica clara sobre ferramentas de IA permitidas, usos proibidos e tipos de dados restritos?",
   "hint": "A empresa publicou uma politica que lista ferramentas aprovadas (ex.: Copilot Enterprise), proibe uso de modelos publicos com codigo proprietario, e define dados PII como restritos.",
+  "scoreProfile": "governance_policy",
   "dimensionCode": "D4",
   "capacityCode": "D4C1"
 }

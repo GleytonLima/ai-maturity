@@ -2,6 +2,7 @@
   "code": "Q32",
   "prompt": "A qualidade, atualizacao e ownership dos dados e conhecimento sao tratadas como fundamento para uso eficaz da IA?",
   "hint": "Existe um owner definido para cada area da documentacao, com SLA de atualizacao (ex.: docs de API revisadas a cada release).",
+  "scoreProfile": "governance_policy",
   "dimensionCode": "D5",
   "capacityCode": "D5C2"
 }

@@ -2,6 +2,7 @@
   "code": "Q22",
   "prompt": "A squad entende e aplica regras sobre privacidade, segredos, dados sensiveis e vazamento de informacao?",
   "hint": "Devs sabem que nao podem colar tokens, secrets ou dados de clientes em prompts; ha DLP configurado para bloquear isso.",
+  "scoreProfile": "governance_policy",
   "dimensionCode": "D4",
   "capacityCode": "D4C1"
 }

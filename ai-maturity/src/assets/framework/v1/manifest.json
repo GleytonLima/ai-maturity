@@ -60,6 +60,54 @@
           "3": "Na maior parte dos casos, o uso de IA nao aumentou retrabalho, defeitos ou instabilidade.",
           "4": "Houve melhoria consistente e comprovada em retrabalho, qualidade ou estabilidade."
         }
+      },
+      "governance_policy": {
+        "labels": {
+          "0": "Nao existe politica/controle",
+          "1": "Existe informalmente",
+          "2": "Documentada, mas inconsistente",
+          "3": "Documentada, conhecida e aplicada",
+          "4": "Revisada periodicamente com base em dados"
+        },
+        "hints": {
+          "0": "Nao ha nenhuma diretriz formal ou informal sobre esse tema.",
+          "1": "Ha orientacoes esparsas ou verbais, mas nao estao documentadas nem amplamente divulgadas.",
+          "2": "A politica ou controle existe e esta acessivel, mas nem todos conhecem ou aplicam de forma consistente.",
+          "3": "O time conhece, segue e consegue citar a politica ou controle quando necessario, com evidencias.",
+          "4": "Alem de aplicada, a politica e revisada com recorrencia e ajustada com base em incidentes, dados ou mudancas."
+        }
+      },
+      "measurement_capability": {
+        "labels": {
+          "0": "Nao mede",
+          "1": "Medicao pontual ou informal",
+          "2": "Mede parcialmente, sem regularidade",
+          "3": "Mede de forma consistente e confiavel",
+          "4": "Mede, analisa tendencias e age com base nos dados"
+        },
+        "hints": {
+          "0": "Nao ha nenhuma medicao, nem informal, sobre esse aspecto.",
+          "1": "Alguem olha eventualmente, mas nao ha processo nem ferramenta dedicada.",
+          "2": "Ha dados disponiveis, mas a medicao nao e regular nem abrangente.",
+          "3": "O time mede de forma recorrente com dados confiaveis e visibilidade para a squad.",
+          "4": "Os dados sao analisados, geram insights e orientam decisoes de melhoria continua."
+        }
+      },
+      "resource_availability": {
+        "labels": {
+          "0": "Nao existe",
+          "1": "Existe de forma rudimentar",
+          "2": "Existe, mas com lacunas",
+          "3": "Acessivel e bem mantido",
+          "4": "Tratado como produto, com evolucao continua"
+        },
+        "hints": {
+          "0": "O recurso, ferramenta ou infraestrutura nao existe.",
+          "1": "Existe algo basico, mas e rudimentar, incompleto ou pouco acessivel.",
+          "2": "Existe e e utilizado, mas tem lacunas significativas em qualidade, cobertura ou acesso.",
+          "3": "Acessivel, bem mantido e cobre as necessidades principais do time.",
+          "4": "Tratado como produto com ownership claro, SLA de qualidade e evolucao continua baseada em feedback."
+        }
       }
     }
   },

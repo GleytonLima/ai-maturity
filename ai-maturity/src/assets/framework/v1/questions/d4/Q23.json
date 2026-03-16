@@ -2,6 +2,7 @@
   "code": "Q23",
   "prompt": "A squad considera riscos de IP, licenciamento, direitos autorais e origem do conteudo gerado por IA?",
   "hint": "A squad verifica se codigo sugerido pela IA nao replica trechos de projetos com licencas restritivas (ex.: GPL em projeto MIT).",
+  "scoreProfile": "governance_policy",
   "dimensionCode": "D4",
   "capacityCode": "D4C1"
 }
