@@ -21,7 +21,7 @@ describe('App', () => {
     await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('h1')?.textContent).toContain(
-      'Framework de maturidade de IA no SDLC'
+      'Modelo de Maturidade de IA para Squads de Engenharia'
     );
   });
 });

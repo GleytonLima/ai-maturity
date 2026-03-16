@@ -1,4 +1,4 @@
-# Framework de maturidade de IA no SDLC
+# Modelo de Maturidade de IA para Squads de Engenharia
 
 Aplicação Angular para gestão de times, assessments e resultados de maturidade no uso de IA ao longo do SDLC.
 

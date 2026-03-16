@@ -1,4 +1,4 @@
-# Framework compacto de maturidade de IA no SDLC
+# Modelo de Maturidade de IA para Squads de Engenharia
 
 ## Escala padrão de resposta
 

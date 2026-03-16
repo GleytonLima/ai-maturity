@@ -2,9 +2,8 @@
   <mat-card appearance="outlined">
     <mat-card-content class="header-layout">
       <div class="header-copy">
-        <p>AIMaturity</p>
-        <h1>Framework de maturidade de IA no SDLC</h1>
-        <p>Gestão de times, assessments e resultados em fluxos separados.</p>
+        <h1>Modelo de Maturidade de IA para Squads de Engenharia</h1>
+        <p>Avaliação e acompanhamento da maturidade no uso de IA dos times de engenharia.</p>
       </div>
 
       <div class="toolbar-actions">
@@ -42,7 +41,6 @@
     @if (activeView() === 'teams') {
       <mat-card appearance="outlined">
         <mat-card-header>
-          <mat-card-subtitle>Times</mat-card-subtitle>
           <mat-card-title>Gerenciamento de times</mat-card-title>
         </mat-card-header>
         <mat-card-content class="content-stack">
@@ -162,7 +160,6 @@
     @if (activeView() === 'tools') {
       <mat-card appearance="outlined">
         <mat-card-header>
-          <mat-card-subtitle>Ferramentas</mat-card-subtitle>
           <mat-card-title>Catálogo de ferramentas de IA</mat-card-title>
         </mat-card-header>
         <mat-card-content class="content-stack">
@@ -306,7 +303,6 @@
     @if (activeView() === 'assessment') {
       <mat-card appearance="outlined">
         <mat-card-header>
-          <mat-card-subtitle>Assessments</mat-card-subtitle>
           <mat-card-title>
             {{ assessmentViewMode() === 'list' ? 'Listagem de assessments' : 'Formulário de assessment' }}
           </mat-card-title>

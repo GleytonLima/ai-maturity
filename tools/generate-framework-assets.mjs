@@ -482,7 +482,7 @@ const dimensions = Object.values(
 
 const manifest = {
   version: 'v1',
-  title: 'Framework compacto de maturidade de IA no SDLC',
+  title: 'Modelo de Maturidade de IA para Squads de Engenharia',
   weights: Object.fromEntries(dimensions.map((dimension) => [dimension.code, dimension.weight])),
   scale: {
     min: 0,

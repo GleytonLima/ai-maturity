@@ -2,10 +2,10 @@ import type { FrameworkCatalog } from '../../models/ai-maturity.models';
 
 export const FRAMEWORK_CATALOG: FrameworkCatalog = {
   "version": "v1",
-  "title": "Framework compacto de maturidade de IA no SDLC",
+  "title": "Modelo de Maturidade de IA para Squads de Engenharia",
   "manifest": {
     "version": "v1",
-    "title": "Framework compacto de maturidade de IA no SDLC",
+    "title": "Modelo de Maturidade de IA para Squads de Engenharia",
     "weights": {
       "D1": 1,
       "D2": 1.1,

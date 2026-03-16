@@ -1,6 +1,6 @@
 {
   "version": "v1",
-  "title": "Framework compacto de maturidade de IA no SDLC",
+  "title": "Modelo de Maturidade de IA para Squads de Engenharia",
   "weights": {
     "D1": 1,
     "D2": 1.1,
