@@ -2,7 +2,7 @@
   "code": "Q37",
   "prompt": "A lideranca e o ambiente da squad favorecem experimentacao segura, com clareza e seguranca psicologica?",
   "hint": "O tech lead encoraja testar novas ferramentas de IA em tarefas de baixo risco, sem penalizar erros; a politica da empresa e clara sobre o que pode e o que nao pode.",
-  "scoreProfile": "people_enablement_maturity",
+  "scoreProfile": "culture_psychological_safety",
   "dimensionCode": "D6",
   "capacityCode": "D6C2"
 }

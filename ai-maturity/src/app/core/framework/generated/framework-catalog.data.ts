@@ -146,6 +146,22 @@ export const FRAMEWORK_CATALOG: FrameworkCatalog = {
             "4": "A capacidade e amplamente distribuida e evolui continuamente com aprendizagem recorrente e ajustes práticos."
           }
         },
+        "culture_psychological_safety": {
+          "labels": {
+            "0": "Ambiente nao favorece",
+            "1": "Favorece de forma esporadica",
+            "2": "Favorece parcialmente",
+            "3": "Lideranca e ambiente favorecem de forma consistente",
+            "4": "Favorecem e evoluem continuamente"
+          },
+          "hints": {
+            "0": "A lideranca ou o ambiente nao encorajam experimentacao segura; ha medo de erro ou falta de clareza.",
+            "1": "Algum suporte existe, mas so de parte da lideranca ou em contextos especificos, sem consistencia.",
+            "2": "Ha clareza e seguranca psicologica em parte dos momentos, mas com lacunas ou inconsistencia.",
+            "3": "A lideranca e o ambiente da squad favorecem experimentacao segura e seguranca psicologica de forma recorrente e visivel.",
+            "4": "O ambiente e a lideranca nao so favorecem como sao revisados e reforcados continuamente com base em feedback."
+          }
+        },
         "data_driven_decisioning": {
           "labels": {
             "0": "Decisoes sem base em dados",
@@ -635,7 +651,7 @@ export const FRAMEWORK_CATALOG: FrameworkCatalog = {
               "code": "Q37",
               "prompt": "A lideranca e o ambiente da squad favorecem experimentacao segura, com clareza e seguranca psicologica?",
               "hint": "O tech lead encoraja testar novas ferramentas de IA em tarefas de baixo risco, sem penalizar erros; a politica da empresa e clara sobre o que pode e o que nao pode.",
-              "scoreProfile": "people_enablement_maturity"
+              "scoreProfile": "culture_psychological_safety"
             },
             {
               "code": "Q38",
