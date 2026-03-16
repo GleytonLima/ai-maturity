@@ -530,7 +530,7 @@
                                         mat-icon-button
                                         type="button"
                                         class="hint-button"
-                                        [matTooltip]="'Exemplo: ' + question.hint"
+                                        [matTooltip]="'Por exemplo, ' + question.hint"
                                         matTooltipPosition="above"
                                         matTooltipClass="hint-tooltip"
                                       >
@@ -545,7 +545,7 @@
                                     (ngModelChange)="updateScore(question.code, $event)"
                                     aria-label="Nota da pergunta"
                                   >
-                                    @for (option of scoreOptions(); track option.value) {
+                                    @for (option of getScoreOptionsForQuestion(question); track option.value) {
                                       <mat-button-toggle
                                         [value]="option.value"
                                         [matTooltip]="option.hint"

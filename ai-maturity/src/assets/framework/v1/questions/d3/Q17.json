@@ -2,6 +2,7 @@
   "code": "Q17",
   "prompt": "A squad consegue usar IA sem aumentar de forma relevante retrabalho, defeitos ou instabilidade?",
   "hint": "A taxa de rollback e bugs em producao nao subiu apos a adocao de IA; a squad monitora isso explicitamente.",
+  "scoreProfile": "outcome_stability",
   "dimensionCode": "D3",
   "capacityCode": "D3C1"
 }

@@ -28,6 +28,7 @@ import type {
   AssessmentViewModel,
   FrameworkCatalog,
   FrameworkDimension,
+  FrameworkQuestion,
   Team,
   Tool,
   ToolStatus
@@ -276,16 +277,6 @@ export class App {
     }
 
     return Math.round(((total - this.unansweredCount()) / total) * 100);
-  });
-  protected readonly scoreOptions = computed(() => {
-    const { labels, hints } = this.catalog().manifest.scale;
-    return Object.entries(labels)
-      .map(([value, label]) => ({
-        value: Number(value),
-        label,
-        hint: hints[value] ?? ''
-      }))
-      .sort((left, right) => left.value - right.value);
   });
   protected readonly pagedTeams = computed(() => {
     const start = this.teamPageIndex() * this.teamPageSize();
@@ -592,6 +583,26 @@ export class App {
       background: `hsl(${hue}, 75%, 92%)`,
       color: `hsl(${hue}, 55%, 25%)`
     };
+  }
+
+  protected getScoreOptionsForQuestion(question: FrameworkQuestion): Array<{
+    value: number;
+    label: string;
+    hint: string;
+  }> {
+    const scale = this.catalog().manifest.scale;
+    const profileKey = question.scoreProfile ?? scale.defaultProfile ?? 'default';
+    const profile = scale.profiles?.[profileKey];
+    const labels = profile?.labels ?? scale.labels;
+    const hints = profile?.hints ?? scale.hints;
+
+    return Object.entries(labels)
+      .map(([value, label]) => ({
+        value: Number(value),
+        label,
+        hint: hints[value] ?? ''
+      }))
+      .sort((left, right) => left.value - right.value);
   }
 
   protected getToolUsageCount(toolId: string): number {

@@ -6,6 +6,7 @@ export interface FrameworkQuestion {
   code: string;
   prompt: string;
   hint: string;
+  scoreProfile?: string;
 }
 
 export interface FrameworkCapacity {
@@ -43,6 +44,11 @@ export interface FrameworkCatalog {
       max: number;
       labels: Record<string, string>;
       hints: Record<string, string>;
+      defaultProfile?: string;
+      profiles?: Record<string, {
+        labels: Record<string, string>;
+        hints: Record<string, string>;
+      }>;
     };
     scoring: {
       question: string;

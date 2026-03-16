@@ -31,6 +31,41 @@ export const FRAMEWORK_CATALOG: FrameworkCatalog = {
         "2": "O time adotou a pratica, mas cada pessoa faz de um jeito diferente, sem padrao definido.",
         "3": "Existe um padrao claro, documentado e seguido pelo time, com evidencias objetivas.",
         "4": "Alem de padronizado, o time mede resultados e ajusta a pratica continuamente com base em dados."
+      },
+      "defaultProfile": "adoption_consistency",
+      "profiles": {
+        "adoption_consistency": {
+          "labels": {
+            "0": "Nao praticado",
+            "1": "Poucos fazem, sem padrao",
+            "2": "Time faz, sem consistencia",
+            "3": "Padronizado e documentado",
+            "4": "Medido e otimizado"
+          },
+          "hints": {
+            "0": "Ninguem no time faz isso, ou e proibido pela organizacao.",
+            "1": "1-2 pessoas fazem por conta propria, sem orientacao nem visibilidade para o time.",
+            "2": "O time adotou a pratica, mas cada pessoa faz de um jeito diferente, sem padrao definido.",
+            "3": "Existe um padrao claro, documentado e seguido pelo time, com evidencias objetivas.",
+            "4": "Alem de padronizado, o time mede resultados e ajusta a pratica continuamente com base em dados."
+          }
+        },
+        "outcome_stability": {
+          "labels": {
+            "0": "Piorou de forma relevante",
+            "1": "Sem evidencia confiavel",
+            "2": "Efeito misto / instavel",
+            "3": "Estavel, sem piora relevante",
+            "4": "Melhorou com evidencia"
+          },
+          "hints": {
+            "0": "Houve aumento claro de retrabalho, defeitos ou instabilidade apos o uso de IA.",
+            "1": "Nao ha dados confiaveis para concluir estabilidade; medicao ausente ou insuficiente.",
+            "2": "Os resultados variam muito entre ciclos, com ganhos e perdas sem padrao claro.",
+            "3": "Na maior parte dos casos, o uso de IA nao aumentou retrabalho, defeitos ou instabilidade.",
+            "4": "Houve melhoria consistente e comprovada em retrabalho, qualidade ou estabilidade."
+          }
+        }
       }
     },
     "scoring": {
@@ -286,7 +321,8 @@ export const FRAMEWORK_CATALOG: FrameworkCatalog = {
             {
               "code": "Q17",
               "prompt": "A squad consegue usar IA sem aumentar de forma relevante retrabalho, defeitos ou instabilidade?",
-              "hint": "A taxa de rollback e bugs em producao nao subiu apos a adocao de IA; a squad monitora isso explicitamente."
+              "hint": "A taxa de rollback e bugs em producao nao subiu apos a adocao de IA; a squad monitora isso explicitamente.",
+              "scoreProfile": "outcome_stability"
             }
           ]
         },
