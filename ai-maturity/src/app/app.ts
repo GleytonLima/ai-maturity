@@ -157,7 +157,7 @@ export class App {
   protected readonly teamPageIndex = signal(0);
   protected readonly teamPageSize = signal(5);
   protected readonly toolPageIndex = signal(0);
-  protected readonly toolPageSize = signal(5);
+  protected readonly toolPageSize = signal(20);
   protected readonly displayedTeamColumns = [
     'name',
     'sector',
