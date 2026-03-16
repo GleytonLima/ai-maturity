@@ -144,4 +144,28 @@ describe('AiMaturityRepository', () => {
     expect(repository.tools()).toHaveLength(0);
     expect(repository.assessments()[0].responses['Q1'].toolIds).toEqual([]);
   });
+
+  it('imports a backup state and normalizes selected team', () => {
+    const repository = new AiMaturityRepository();
+
+    repository.importState({
+      version: 'v2',
+      selectedTeamId: 'missing-team',
+      teams: [
+        {
+          id: 'team-10',
+          name: 'Time Importado',
+          sector: 'Engenharia',
+          description: '',
+          createdAt: '2026-03-13T00:00:00.000Z',
+          updatedAt: '2026-03-13T00:00:00.000Z'
+        }
+      ],
+      tools: [],
+      assessments: []
+    });
+
+    expect(repository.teams()).toHaveLength(1);
+    expect(repository.selectedTeamId()).toBe('team-10');
+  });
 });

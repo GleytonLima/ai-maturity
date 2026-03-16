@@ -27,6 +27,10 @@ function createDefaultState(): PersistedState {
   };
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null;
+}
+
 function normalizeTools(tools: Tool[]): Tool[] {
   const usedIds = new Set<string>();
 
@@ -218,6 +222,19 @@ export class AiMaturityRepository {
     return this.state();
   }
 
+  importState(rawState: unknown): void {
+    if (!isRecord(rawState)) {
+      throw new Error('Invalid backup format');
+    }
+
+    const normalizedState = this.normalizeState(rawState as Partial<PersistedState>);
+    this.state.set(normalizedState);
+
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(normalizedState));
+    }
+  }
+
   private readState(): PersistedState {
     if (typeof localStorage === 'undefined') {
       return createDefaultState();
@@ -230,14 +247,7 @@ export class AiMaturityRepository {
 
     try {
       const parsedState = JSON.parse(rawState) as Partial<PersistedState>;
-      const normalizedState = {
-        ...createDefaultState(),
-        ...parsedState,
-        version: 'v2',
-        teams: parsedState.teams ?? [],
-        tools: normalizeTools(parsedState.tools ?? []),
-        assessments: normalizeAssessments(parsedState.assessments ?? [])
-      };
+      const normalizedState = this.normalizeState(parsedState);
 
       localStorage.setItem(STORAGE_KEY, JSON.stringify(normalizedState));
 
@@ -254,5 +264,22 @@ export class AiMaturityRepository {
     if (typeof localStorage !== 'undefined') {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(nextState));
     }
+  }
+
+  private normalizeState(parsedState: Partial<PersistedState>): PersistedState {
+    const teams = parsedState.teams ?? [];
+    const selectedTeamId = teams.some((team) => team.id === parsedState.selectedTeamId)
+      ? (parsedState.selectedTeamId ?? null)
+      : (teams[0]?.id ?? null);
+
+    return {
+      ...createDefaultState(),
+      ...parsedState,
+      version: 'v2',
+      selectedTeamId,
+      teams,
+      tools: normalizeTools(parsedState.tools ?? []),
+      assessments: normalizeAssessments(parsedState.assessments ?? [])
+    };
   }
 }

@@ -11,9 +11,16 @@
         <button mat-stroked-button color="primary" type="button" (click)="exportJson()">
           Exportar JSON
         </button>
-        <button mat-flat-button color="primary" type="button" (click)="exportCsv()">
-          Exportar CSV
+        <button mat-flat-button color="primary" type="button" (click)="importFileInput.click()">
+          Importar JSON
         </button>
+        <input
+          #importFileInput
+          type="file"
+          accept="application/json"
+          hidden
+          (change)="importJsonFile($event)"
+        />
       </div>
     </mat-card-content>
   </mat-card>
@@ -563,16 +570,18 @@
                                     </mat-select>
                                   </mat-form-field>
 
-                                  <mat-form-field appearance="outline" class="full-span">
-                                    <mat-label>Evidencia objetiva</mat-label>
-                                    <textarea
-                                      matInput
-                                      rows="2"
-                                      [ngModel]="draft().responses[question.code]?.evidence"
-                                      (ngModelChange)="updateEvidence(question.code, $event)"
-                                      placeholder="Obrigatoria para notas 3 ou 4"
-                                    ></textarea>
-                                  </mat-form-field>
+                                  @if ((draft().responses[question.code]?.score ?? -1) >= 3) {
+                                    <mat-form-field appearance="outline" class="full-span">
+                                      <mat-label>Evidencia objetiva</mat-label>
+                                      <textarea
+                                        matInput
+                                        rows="2"
+                                        [ngModel]="draft().responses[question.code]?.evidence"
+                                        (ngModelChange)="updateEvidence(question.code, $event)"
+                                        placeholder="Obrigatoria para notas 3 ou 4"
+                                      ></textarea>
+                                    </mat-form-field>
+                                  }
 
                                   @if ((draft().responses[question.code]?.score ?? -1) >= 3 && !draft().responses[question.code]?.evidence?.trim()) {
                                     <p>Informe pelo menos uma evidencia objetiva.</p>

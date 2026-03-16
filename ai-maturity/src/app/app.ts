@@ -758,15 +758,30 @@ export class App {
     );
   }
 
-  protected exportCsv(): void {
-    const now = new Date().toISOString().slice(0, 10);
-    const csv = this.exportService.buildCsvRows(
-      this.teams(),
-      this.assessmentViewModels().filter(
-        ({ assessment }) => assessment.status === 'finalized'
-      )
-    );
-    this.exportService.downloadFile(`aimaturity-results-${now}.csv`, csv, 'text/csv');
+  protected async importJsonFile(event: Event): Promise<void> {
+    const input = event.target as HTMLInputElement | null;
+    const file = input?.files?.[0];
+    if (!file) {
+      return;
+    }
+
+    try {
+      const text = await file.text();
+      const payload = JSON.parse(text) as unknown;
+
+      this.repository.importState(payload);
+      this.resetDraftFromSelection();
+      this.assessmentViewMode.set('list');
+      this.resultViewMode.set('list');
+      this.selectedResultAssessmentId.set(null);
+      this.announce('Backup JSON importado com sucesso.');
+    } catch {
+      this.announce('Falha ao importar JSON. Verifique se o arquivo e um backup valido.');
+    } finally {
+      if (input) {
+        input.value = '';
+      }
+    }
   }
 
   protected canFinalize(): boolean {
