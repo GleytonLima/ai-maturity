@@ -130,6 +130,22 @@ export const FRAMEWORK_CATALOG: FrameworkCatalog = {
             "4": "A resposta tecnica e rapida, confiavel e continuamente melhorada com feedback sobre qualidade e tempo."
           }
         },
+        "people_enablement_maturity": {
+          "labels": {
+            "0": "Sem base minima no time",
+            "1": "Capacidade concentrada em poucos",
+            "2": "Capacidade parcial e inconsistente",
+            "3": "Capacidade difundida e aplicada",
+            "4": "Capacidade difundida com evolucao continua"
+          },
+          "hints": {
+            "0": "O time nao tem treinamento, criterios ou clareza minima para uso seguro e eficaz de IA.",
+            "1": "A capacidade existe em poucas pessoas, gerando dependencia de power users.",
+            "2": "Parte da squad domina o tema, mas ainda ha lacunas relevantes de alinhamento e consistencia.",
+            "3": "A maioria da squad aplica criterios comuns e sabe quando usar, quando nao usar e como revisar.",
+            "4": "A capacidade e amplamente distribuida e evolui continuamente com aprendizagem recorrente e ajustes práticos."
+          }
+        },
 
         "measurement_capability": {
           "labels": {
@@ -573,17 +589,20 @@ export const FRAMEWORK_CATALOG: FrameworkCatalog = {
             {
               "code": "Q33",
               "prompt": "A squad recebeu treinamento minimo sobre como usar IA, avaliar respostas e reconhecer limites e riscos?",
-              "hint": "O time participou de um workshop de 2h sobre como avaliar criticamente outputs de IA, identificar alucinacoes e saber quando nao confiar no resultado."
+              "hint": "O time participou de um workshop de 2h sobre como avaliar criticamente outputs de IA, identificar alucinacoes e saber quando nao confiar no resultado.",
+              "scoreProfile": "people_enablement_maturity"
             },
             {
               "code": "Q34",
               "prompt": "O uso de IA esta distribuido no time, em vez de concentrado em poucos power users?",
-              "hint": "Telemetria mostra que 80% do time usa IA semanalmente, nao so 1-2 pessoas; pair programming com IA e incentivado."
+              "hint": "Telemetria mostra que 80% do time usa IA semanalmente, nao so 1-2 pessoas; pair programming com IA e incentivado.",
+              "scoreProfile": "people_enablement_maturity"
             },
             {
               "code": "Q35",
               "prompt": "A squad sabe explicitar quando nao usar IA ou quando exigir revisao reforcada?",
-              "hint": "O guideline do time lista cenarios onde IA nao deve ser usada sem revisao reforcada (ex.: logica de billing, regras de compliance, manipulacao de PII)."
+              "hint": "O guideline do time lista cenarios onde IA nao deve ser usada sem revisao reforcada (ex.: logica de billing, regras de compliance, manipulacao de PII).",
+              "scoreProfile": "people_enablement_maturity"
             }
           ]
         },

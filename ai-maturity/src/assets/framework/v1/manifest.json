@@ -125,6 +125,22 @@
           "4": "A resposta tecnica e rapida, confiavel e continuamente melhorada com feedback sobre qualidade e tempo."
         }
       },
+      "people_enablement_maturity": {
+        "labels": {
+          "0": "Sem base minima no time",
+          "1": "Capacidade concentrada em poucos",
+          "2": "Capacidade parcial e inconsistente",
+          "3": "Capacidade difundida e aplicada",
+          "4": "Capacidade difundida com evolucao continua"
+        },
+        "hints": {
+          "0": "O time nao tem treinamento, criterios ou clareza minima para uso seguro e eficaz de IA.",
+          "1": "A capacidade existe em poucas pessoas, gerando dependencia de power users.",
+          "2": "Parte da squad domina o tema, mas ainda ha lacunas relevantes de alinhamento e consistencia.",
+          "3": "A maioria da squad aplica criterios comuns e sabe quando usar, quando nao usar e como revisar.",
+          "4": "A capacidade e amplamente distribuida e evolui continuamente com aprendizagem recorrente e ajustes praticos."
+        }
+      },
       "measurement_capability": {
         "labels": {
           "0": "Nao mede",

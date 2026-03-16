@@ -2,6 +2,7 @@
   "code": "Q33",
   "prompt": "A squad recebeu treinamento minimo sobre como usar IA, avaliar respostas e reconhecer limites e riscos?",
   "hint": "O time participou de um workshop de 2h sobre como avaliar criticamente outputs de IA, identificar alucinacoes e saber quando nao confiar no resultado.",
+  "scoreProfile": "people_enablement_maturity",
   "dimensionCode": "D6",
   "capacityCode": "D6C1"
 }

@@ -2,6 +2,7 @@
   "code": "Q34",
   "prompt": "O uso de IA esta distribuido no time, em vez de concentrado em poucos power users?",
   "hint": "Telemetria mostra que 80% do time usa IA semanalmente, nao so 1-2 pessoas; pair programming com IA e incentivado.",
+  "scoreProfile": "people_enablement_maturity",
   "dimensionCode": "D6",
   "capacityCode": "D6C1"
 }

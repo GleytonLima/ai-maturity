@@ -2,6 +2,7 @@
   "code": "Q35",
   "prompt": "A squad sabe explicitar quando nao usar IA ou quando exigir revisao reforcada?",
   "hint": "O guideline do time lista cenarios onde IA nao deve ser usada sem revisao reforcada (ex.: logica de billing, regras de compliance, manipulacao de PII).",
+  "scoreProfile": "people_enablement_maturity",
   "dimensionCode": "D6",
   "capacityCode": "D6C1"
 }
