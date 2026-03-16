@@ -188,6 +188,14 @@ export class App {
     'score',
     'actions'
   ];
+  protected readonly resultDetailQuestionColumns = [
+    'dimension',
+    'code',
+    'prompt',
+    'score',
+    'evidence',
+    'tools'
+  ];
 
   protected readonly selectedTeam = computed(
     () =>
@@ -293,6 +301,38 @@ export class App {
     return this.finalizedAssessments().find(
       ({ assessment }) => assessment.id === assessmentId
     ) ?? null;
+  });
+  protected readonly resultDetailSearch = signal('');
+  protected readonly resultDetailDimensionFilter = signal<string>('');
+  protected readonly resultDetailQuestionRows = computed(() => {
+    const detail = this.currentResultDetail();
+    const catalog = this.catalog();
+    const search = this.resultDetailSearch().trim().toLowerCase();
+    const dimensionCode = this.resultDetailDimensionFilter();
+    if (!detail) return [];
+    const rows: Array<{
+      question: FrameworkQuestion;
+      response: AssessmentAnswer | undefined;
+      dimensionCode: string;
+      dimensionTitle: string;
+    }> = [];
+    for (const dimension of catalog.dimensions) {
+      if (dimensionCode && dimension.code !== dimensionCode) continue;
+      for (const capacity of dimension.capacities) {
+        for (const question of capacity.questions) {
+          if (search && !question.code.toLowerCase().includes(search) && !question.prompt.toLowerCase().includes(search)) {
+            continue;
+          }
+          rows.push({
+            question,
+            response: detail.assessment.responses[question.code],
+            dimensionCode: dimension.code,
+            dimensionTitle: dimension.title
+          });
+        }
+      }
+    }
+    return rows;
   });
   protected readonly unansweredCount = computed(() => {
     const catalog = this.catalog();
@@ -835,6 +875,15 @@ export class App {
   protected backToResultsList(): void {
     this.resultViewMode.set('list');
     this.selectedResultAssessmentId.set(null);
+    this.resultDetailSearch.set('');
+    this.resultDetailDimensionFilter.set('');
+  }
+
+  protected getScoreLabel(question: FrameworkQuestion, score: number | null): string {
+    if (score === null) return '—';
+    const options = this.getScoreOptionsForQuestion(question);
+    const opt = options.find((o) => o.value === score);
+    return opt ? `${opt.value} - ${opt.label}` : String(score);
   }
 
   protected openLevelsHelp(): void {

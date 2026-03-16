@@ -842,6 +842,85 @@
             }
           </div>
         </div>
+
+        <div class="result-block">
+          <h3 class="result-block-title">Perguntas e respostas</h3>
+          <p class="result-block-desc">Respostas deste assessment, somente leitura. Use a pesquisa e o filtro por dimensão para refinar.</p>
+          <div class="questions-filters">
+            <mat-form-field appearance="outline" class="questions-search-field">
+              <mat-label>Pesquisar</mat-label>
+              <input
+                matInput
+                [ngModel]="resultDetailSearch()"
+                (ngModelChange)="resultDetailSearch.set($event)"
+                placeholder="Ex.: Q5, SDLC, segurança..."
+              />
+              <mat-icon matPrefix>search</mat-icon>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="questions-dimension-field">
+              <mat-label>Dimensão</mat-label>
+              <mat-select
+                [ngModel]="resultDetailDimensionFilter()"
+                (ngModelChange)="resultDetailDimensionFilter.set($event)"
+              >
+                <mat-option value="">Todas as dimensões</mat-option>
+                @for (dim of catalog().dimensions; track dim.code) {
+                  <mat-option [value]="dim.code">{{ dim.code }}: {{ dim.title }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          @if (resultDetailQuestionRows().length) {
+            <div class="table-wrapper questions-table-wrapper">
+              <table mat-table [dataSource]="resultDetailQuestionRows()" class="full-width-table questions-readonly-table">
+                <ng-container matColumnDef="dimension">
+                  <th mat-header-cell *matHeaderCellDef>Dimensão</th>
+                  <td mat-cell *matCellDef="let row">{{ row.dimensionCode }}: {{ row.dimensionTitle }}</td>
+                </ng-container>
+                <ng-container matColumnDef="code">
+                  <th mat-header-cell *matHeaderCellDef>Código</th>
+                  <td mat-cell *matCellDef="let row"><strong>{{ row.question.code }}</strong></td>
+                </ng-container>
+                <ng-container matColumnDef="prompt">
+                  <th mat-header-cell *matHeaderCellDef>Pergunta</th>
+                  <td mat-cell *matCellDef="let row">{{ row.question.prompt }}</td>
+                </ng-container>
+                <ng-container matColumnDef="score">
+                  <th mat-header-cell *matHeaderCellDef>Nota</th>
+                  <td mat-cell *matCellDef="let row">
+                    {{ getScoreLabel(row.question, row.response?.score ?? null) }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="evidence">
+                  <th mat-header-cell *matHeaderCellDef>Evidência</th>
+                  <td mat-cell *matCellDef="let row">
+                    @if (row.response?.evidence?.trim()) {
+                      {{ row.response.evidence }}
+                    } @else {
+                      <span class="muted">—</span>
+                    }
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="tools">
+                  <th mat-header-cell *matHeaderCellDef>Ferramentas</th>
+                  <td mat-cell *matCellDef="let row">
+                    @if (row.response?.toolIds?.length) {
+                      {{ row.response.toolIds.map(id => getToolName(id)).join(', ') }}
+                    } @else {
+                      <span class="muted">—</span>
+                    }
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="resultDetailQuestionColumns"></tr>
+                <tr mat-row *matRowDef="let r; columns: resultDetailQuestionColumns"></tr>
+              </table>
+            </div>
+          } @else {
+            <p class="empty-state">Nenhuma pergunta encontrada para o filtro informado.</p>
+          }
+        </div>
       }
     }
   </section>
