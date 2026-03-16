@@ -99,6 +99,11 @@
   padding-top: 8px;
 }
 
+.accordion-actions {
+  margin-bottom: 12px;
+  justify-content: flex-end;
+}
+
 .question-header {
   display: flex;
   justify-content: space-between;
@@ -134,6 +139,12 @@
   border-radius: 12px;
   font-size: 0.8125rem;
   font-weight: 600;
+}
+
+.evidence-pending-meta {
+  margin-left: 8px;
+  font-size: 0.8125rem;
+  color: var(--mat-sys-error, #b3261e);
 }
 
 .comparison-row {

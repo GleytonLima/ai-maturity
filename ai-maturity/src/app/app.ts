@@ -1,12 +1,13 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal, ViewChildren } from '@angular/core';
+import type { QueryList } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatExpansionModule } from '@angular/material/expansion';
+import { MatExpansionModule, MatExpansionPanel } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
@@ -109,6 +110,8 @@ export class App {
   private readonly scoringService = inject(AssessmentScoringService);
   private readonly exportService = inject(ExportService);
   private readonly snackBar = inject(MatSnackBar);
+
+  @ViewChildren(MatExpansionPanel) private dimensionPanels!: QueryList<MatExpansionPanel>;
 
   protected readonly catalog = signal<FrameworkCatalog>(this.catalogService.getCatalog());
   protected readonly activeView = signal<'teams' | 'tools' | 'assessment' | 'results'>('teams');
@@ -267,16 +270,24 @@ export class App {
     const catalog = this.catalog();
     return this.getAllQuestions(catalog).filter((question) => {
       const response = this.draft().responses[question.code];
-      return response && response.score !== null && response.score >= 3 && !response.evidence.trim();
+      return response && response.score !== null && response.score >= 3 && !(response.evidence?.trim());
+    }).length;
+  });
+  /** Conta perguntas com nota e, quando nota >= 3, evidencia preenchida. */
+  protected readonly fullyCompleteCount = computed(() => {
+    const catalog = this.catalog();
+    const responses = this.draft().responses;
+    return this.getAllQuestions(catalog).filter((question) => {
+      const response = responses[question.code];
+      if (!response || response.score == null) return false;
+      if (response.score >= 3) return Boolean(response.evidence?.trim());
+      return true;
     }).length;
   });
   protected readonly completionPercent = computed(() => {
     const total = this.getAllQuestions(this.catalog()).length;
-    if (total === 0) {
-      return 0;
-    }
-
-    return Math.round(((total - this.unansweredCount()) / total) * 100);
+    if (total === 0) return 0;
+    return Math.round((this.fullyCompleteCount() / total) * 100);
   });
   protected readonly pagedTeams = computed(() => {
     const start = this.teamPageIndex() * this.teamPageSize();
@@ -567,14 +578,40 @@ export class App {
     answered: number;
     total: number;
     percent: number;
+    evidencePending: number;
   } {
     const questions = dimension.capacities.flatMap((c) => c.questions);
     const total = questions.length;
-    const answered = questions.filter(
-      (q) => this.draft().responses[q.code]?.score != null
-    ).length;
+    const responses = this.draft().responses;
+    let answered = 0;
+    let evidencePending = 0;
+    for (const q of questions) {
+      const response = responses[q.code];
+      if (!response || response.score == null) continue;
+      if (response.score >= 3) {
+        if (response.evidence?.trim()) answered += 1;
+        else evidencePending += 1;
+      } else {
+        answered += 1;
+      }
+    }
     const percent = total ? Math.round((answered / total) * 100) : 0;
-    return { answered, total, percent };
+    return { answered, total, percent, evidencePending };
+  }
+
+  protected toggleAllDimensions(): void {
+    const panels = this.dimensionPanels?.toArray() ?? [];
+    const allExpanded = panels.length > 0 && panels.every((p) => p.expanded);
+    if (allExpanded) {
+      panels.forEach((p) => p.close());
+    } else {
+      panels.forEach((p) => p.open());
+    }
+  }
+
+  protected get allDimensionsExpanded(): boolean {
+    const panels = this.dimensionPanels?.toArray() ?? [];
+    return panels.length > 0 && panels.every((p) => p.expanded);
   }
 
   protected getCompletionBadgeStyle(percent: number): Record<string, string> {

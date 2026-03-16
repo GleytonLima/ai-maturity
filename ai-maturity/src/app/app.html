@@ -492,6 +492,11 @@
             </mat-card>
 
             @if (assessmentFormStep() === 'questions') {
+              <div class="action-row accordion-actions">
+                <button mat-stroked-button type="button" (click)="toggleAllDimensions()">
+                  {{ allDimensionsExpanded ? "Recolher todas" : "Expandir todas" }}
+                </button>
+              </div>
               <mat-accordion multi>
                 @for (dimension of catalog().dimensions; track dimension.code) {
                   @let dimCompletion = getDimensionCompletion(dimension);
@@ -506,6 +511,9 @@
                         >
                           {{ dimCompletion.answered }}/{{ dimCompletion.total }} ({{ dimCompletion.percent }}%)
                         </span>
+                        @if (dimCompletion.evidencePending > 0) {
+                          <span class="evidence-pending-meta">{{ dimCompletion.evidencePending }} evidencia(s) pendente(s)</span>
+                        }
                       </mat-panel-description>
                     </mat-expansion-panel-header>
 
