@@ -353,6 +353,9 @@ export class App {
         return cmp * dir;
       }
       if (sort.active === 'code') {
+        const na = this.parseQuestionCodeNumber(a.question.code);
+        const nb = this.parseQuestionCodeNumber(b.question.code);
+        if (na !== null && nb !== null) return (na - nb) * dir;
         return a.question.code.localeCompare(b.question.code) * dir;
       }
       if (sort.active === 'prompt') {
@@ -910,6 +913,11 @@ export class App {
     const active = (sort.active || 'code') as 'dimension' | 'code' | 'prompt' | 'score';
     const direction = (sort.direction || 'asc') as 'asc' | 'desc';
     this.questionRowsSort.set({ active, direction });
+  }
+
+  private parseQuestionCodeNumber(code: string): number | null {
+    const match = code.match(/\d+/);
+    return match ? parseInt(match[0], 10) : null;
   }
 
   protected backToAssessmentList(): void {
