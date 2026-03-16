@@ -617,235 +617,284 @@
     }
 
     @if (activeView() === 'results') {
-      <mat-card appearance="outlined">
-        <mat-card-header>
-          <mat-card-subtitle>Resultados</mat-card-subtitle>
-          <mat-card-title>
-            {{ resultViewMode() === 'list' ? 'Tabela de resultados finalizados' : 'Detalhe do resultado' }}
-          </mat-card-title>
-        </mat-card-header>
-        <mat-card-content class="content-stack">
-          @if (resultViewMode() === 'list') {
-            @if (finalizedAssessments().length) {
-              @if (portfolioToolSummary().length) {
-                <mat-card appearance="outlined">
-                  <mat-card-header>
-                    <mat-card-subtitle>Ferramentas</mat-card-subtitle>
-                    <mat-card-title>Ferramentas mais associadas nos resultados</mat-card-title>
-                  </mat-card-header>
-                  <mat-card-content class="content-stack">
-                    <div class="result-grid">
-                      @for (tool of portfolioToolSummary().slice(0, 6); track tool.toolId) {
-                        <mat-card appearance="outlined">
-                          <mat-card-header>
-                            <mat-card-title>{{ tool.name }}</mat-card-title>
-                            <mat-card-subtitle>
-                              {{ tool.count }} associações · {{ tool.teams.length }} times
-                            </mat-card-subtitle>
-                          </mat-card-header>
-                          <mat-card-content class="content-stack content-stack-tight">
-                            <p>Perguntas: {{ tool.questionCodes.join(', ') }}</p>
-                          </mat-card-content>
-                        </mat-card>
-                      }
-                    </div>
+      @if (resultViewMode() === 'list') {
+        <div class="results-header">
+          <h2 class="results-title">Resultados finalizados</h2>
+          <button mat-icon-button (click)="openLevelsHelp()" matTooltip="Entenda os níveis de maturidade">
+            <mat-icon>help_outline</mat-icon>
+          </button>
+        </div>
 
-                    @if (portfolioToolSummaryByDimension().length) {
-                      <div class="result-grid">
-                        @for (item of portfolioToolSummaryByDimension(); track item.dimension.code) {
-                          <mat-card appearance="outlined">
-                            <mat-card-header>
-                              <mat-card-subtitle>{{ item.dimension.code }}</mat-card-subtitle>
-                              <mat-card-title>{{ item.dimension.title }}</mat-card-title>
-                            </mat-card-header>
-                            <mat-card-content class="content-stack content-stack-tight">
-                              @for (tool of item.tools.slice(0, 3); track tool.toolId) {
-                                <div class="split-row">
-                                  <span>{{ tool.name }}</span>
-                                  <strong>{{ tool.count }}</strong>
-                                </div>
-                              }
-                            </mat-card-content>
-                          </mat-card>
-                        }
-                      </div>
-                    }
-                  </mat-card-content>
-                </mat-card>
+        @if (finalizedAssessments().length) {
+          @if (portfolioToolSummary().length) {
+            <p class="subsection-label">Ferramentas mais associadas</p>
+            <div class="tool-summary-grid">
+              @for (tool of portfolioToolSummary().slice(0, 6); track tool.toolId) {
+                <div class="tool-summary-item">
+                  <strong>{{ tool.name }}</strong>
+                  <span class="tool-meta">{{ tool.count }} associações · {{ tool.teams.length }} times</span>
+                  <span class="tool-meta">{{ tool.questionCodes.join(', ') }}</span>
+                </div>
               }
-
-              <div class="table-wrapper">
-                <table mat-table [dataSource]="finalizedAssessments()" class="full-width-table">
-                  <ng-container matColumnDef="team">
-                    <th mat-header-cell *matHeaderCellDef>Time</th>
-                    <td mat-cell *matCellDef="let item">{{ getTeamName(item.assessment.teamId) }}</td>
-                  </ng-container>
-
-                  <ng-container matColumnDef="finalizedAt">
-                    <th mat-header-cell *matHeaderCellDef>Finalizado em</th>
-                    <td mat-cell *matCellDef="let item">
-                      {{ (item.assessment.finalizedAt ?? item.assessment.updatedAt) | date: 'dd/MM/yyyy HH:mm' }}
-                    </td>
-                  </ng-container>
-
-                  <ng-container matColumnDef="level">
-                    <th mat-header-cell *matHeaderCellDef>Nível</th>
-                    <td mat-cell *matCellDef="let item">
-                      {{ item.result.level.level }} - {{ item.result.level.label }}
-                    </td>
-                  </ng-container>
-
-                  <ng-container matColumnDef="score">
-                    <th mat-header-cell *matHeaderCellDef>Score</th>
-                    <td mat-cell *matCellDef="let item">{{ item.result.overallScore | number: '1.2-2' }}</td>
-                  </ng-container>
-
-                  <ng-container matColumnDef="actions">
-                    <th mat-header-cell *matHeaderCellDef>Ações</th>
-                    <td mat-cell *matCellDef="let item">
-                      <div class="table-actions">
-                        <button mat-button type="button" (click)="openResultDetail(item.assessment.id)">
-                          Ver detalhes
-                        </button>
-                        <button mat-button type="button" (click)="deleteAssessment(item.assessment.id)">
-                          Remover
-                        </button>
-                      </div>
-                    </td>
-                  </ng-container>
-
-                  <tr mat-header-row *matHeaderRowDef="displayedResultColumns"></tr>
-                  <tr mat-row *matRowDef="let row; columns: displayedResultColumns"></tr>
-                </table>
-              </div>
-            } @else {
-              <div>Nenhum resultado finalizado.</div>
-            }
-          } @else if (currentResultDetail(); as item) {
-            <div class="table-toolbar">
-              <button mat-button type="button" (click)="backToResultsList()">Voltar para a lista</button>
             </div>
-            <mat-card appearance="outlined">
-              <mat-card-header>
-                <mat-card-subtitle>Detalhe do resultado</mat-card-subtitle>
-                <mat-card-title>
-                  {{ item.result.level.level }} - {{ item.result.level.label }}
-                </mat-card-title>
-              </mat-card-header>
-              <mat-card-content class="content-stack">
-                <p>Time: {{ getTeamName(item.assessment.teamId) }}</p>
-                <p>Score geral: {{ item.result.overallScore | number: '1.2-2' }}</p>
 
-                <mat-card appearance="outlined" class="level-detail-card">
-                  <mat-card-header>
-                    <mat-card-subtitle>Diagnóstico de maturidade</mat-card-subtitle>
-                    <mat-card-title>{{ item.result.level.level }} — {{ item.result.level.label }}</mat-card-title>
-                  </mat-card-header>
-                  <mat-card-content class="content-stack">
-                    <p>{{ item.result.level.description }}</p>
-
-                    <div class="level-example">
-                      <p><strong>Exemplo de squad neste nível:</strong></p>
-                      <p>{{ item.result.level.example }}</p>
+            @if (portfolioToolSummaryByDimension().length) {
+              <div class="tool-summary-grid">
+                @for (item of portfolioToolSummaryByDimension(); track item.dimension.code) {
+                  <div class="tool-summary-item">
+                    <div class="dim-inline-label">
+                      <span class="dim-badge">{{ item.dimension.code }}</span>
+                      <strong>{{ item.dimension.title }}</strong>
                     </div>
-
-                    @if (item.result.level.evolution.length) {
-                      <div class="level-evolution">
-                        <p>
-                          <strong>
-                            {{ item.result.level.level === 'N5' ? 'Como manter N5:' : 'Como evoluir para o próximo nível:' }}
-                          </strong>
-                        </p>
-                        <ol>
-                          @for (step of item.result.level.evolution; track $index) {
-                            <li>{{ step }}</li>
-                          }
-                        </ol>
+                    @for (tool of item.tools.slice(0, 3); track tool.toolId) {
+                      <div class="split-row">
+                        <span>{{ tool.name }}</span>
+                        <strong>{{ tool.count }}</strong>
                       </div>
                     }
-                  </mat-card-content>
-                </mat-card>
-
-                @if (item.result.gatingReasons.length) {
-                  <mat-card appearance="outlined" class="gating-card">
-                    <mat-card-header>
-                      <mat-card-subtitle>Restrições de gating</mat-card-subtitle>
-                      <mat-card-title>O nível foi limitado por regras estruturais</mat-card-title>
-                    </mat-card-header>
-                    <mat-card-content class="content-stack content-stack-tight">
-                      @if (item.result.rawLevel.level !== item.result.level.level) {
-                        <p>
-                          Nível bruto pelo score: <strong>{{ item.result.rawLevel.level }} — {{ item.result.rawLevel.label }}</strong>.
-                          Limitado a <strong>{{ item.result.level.level }}</strong> pelas regras abaixo:
-                        </p>
-                      }
-                      @for (reason of item.result.gatingReasons; track reason) {
-                        <p>⚠️ {{ reason }}</p>
-                      }
-                    </mat-card-content>
-                  </mat-card>
+                  </div>
                 }
+              </div>
+            }
+          }
 
-                @if (item.result.structuralRisks.length || item.result.qualityRisks.length) {
-                  <mat-card appearance="outlined" class="risk-card">
-                    <mat-card-header>
-                      <mat-card-subtitle>Alertas críticos</mat-card-subtitle>
-                      <mat-card-title>Perguntas com score zero em áreas críticas</mat-card-title>
-                    </mat-card-header>
-                    <mat-card-content class="content-stack content-stack-tight">
-                      @if (item.result.structuralRisks.length) {
-                        <p>🔴 <strong>Risco estrutural (segurança):</strong> {{ item.result.structuralRisks.join(', ') }}</p>
-                      }
-                      @if (item.result.qualityRisks.length) {
-                        <p>🟠 <strong>Risco de qualidade:</strong> {{ item.result.qualityRisks.join(', ') }}</p>
-                      }
-                    </mat-card-content>
-                  </mat-card>
+          <div class="table-wrapper">
+            <table
+              mat-table
+              [dataSource]="sortedFinalizedAssessments()"
+              class="full-width-table"
+              matSort
+              [matSortActive]="resultsSort().active"
+              [matSortDirection]="resultsSort().direction"
+              [matSortDisableClear]="true"
+              (matSortChange)="onResultsSortChange($event)"
+            >
+              <ng-container matColumnDef="team">
+                <th mat-header-cell *matHeaderCellDef>Time</th>
+                <td mat-cell *matCellDef="let item">{{ getTeamName(item.assessment.teamId) }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="finalizedAt">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header="finalizedAt">Finalizado em</th>
+                <td mat-cell *matCellDef="let item">
+                  {{ (item.assessment.finalizedAt ?? item.assessment.updatedAt) | date: 'dd/MM/yyyy HH:mm' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="level">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header="level">Nível</th>
+                <td mat-cell *matCellDef="let item">
+                  <span class="level-pill" [style.background]="getLevelColor(item.result.level.level)">
+                    {{ item.result.level.level }}
+                  </span>
+                  {{ item.result.level.label }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="score">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header="score">Score</th>
+                <td mat-cell *matCellDef="let item">
+                  <span class="score-inline">{{ item.result.overallScore | number: '1.2-2' }}</span>
+                  <span class="score-inline-max">/4.00</span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>Ações</th>
+                <td mat-cell *matCellDef="let item">
+                  <div class="table-actions">
+                    <button mat-button type="button" (click)="openResultDetail(item.assessment.id)">Ver detalhes</button>
+                    <button mat-button type="button" (click)="deleteAssessment(item.assessment.id)">Remover</button>
+                  </div>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedResultColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedResultColumns"></tr>
+            </table>
+          </div>
+        } @else {
+          <p class="empty-state">Nenhum resultado finalizado.</p>
+        }
+      } @else if (currentResultDetail(); as item) {
+        <div class="detail-toolbar">
+          <button mat-button (click)="backToResultsList()">
+            <mat-icon>arrow_back</mat-icon> Voltar para a lista
+          </button>
+          <button mat-icon-button (click)="openLevelsHelp()" matTooltip="Entenda os níveis de maturidade">
+            <mat-icon>help_outline</mat-icon>
+          </button>
+        </div>
+
+        <div class="result-hero">
+          <div class="hero-left">
+            <span class="level-badge-lg" [style.background]="getLevelColor(item.result.level.level)">
+              {{ item.result.level.level }}
+            </span>
+            <div>
+              <h2 class="hero-title">{{ item.result.level.label }}</h2>
+              <p class="hero-subtitle">{{ getTeamName(item.assessment.teamId) }}</p>
+            </div>
+          </div>
+          <div class="hero-right">
+            <div class="hero-score-line">
+              <span class="hero-score">{{ item.result.overallScore | number: '1.2-2' }}</span>
+              <span class="hero-score-max">/4.00</span>
+            </div>
+            <span class="hero-score-caption">Score geral</span>
+          </div>
+        </div>
+
+        @if (item.result.gatingReasons.length) {
+          <div class="result-alert result-alert--warning">
+            <mat-icon>warning_amber</mat-icon>
+            <div>
+              <strong>Restrições de gating</strong>
+              @if (item.result.rawLevel.level !== item.result.level.level) {
+                <p>
+                  Nível bruto pelo score: <strong>{{ item.result.rawLevel.level }} — {{ item.result.rawLevel.label }}</strong>.
+                  Limitado a <strong>{{ item.result.level.level }}</strong> pelas regras abaixo:
+                </p>
+              }
+              @for (reason of item.result.gatingReasons; track reason) {
+                <p>{{ reason }}</p>
+              }
+            </div>
+          </div>
+        }
+
+        @if (item.result.structuralRisks.length || item.result.qualityRisks.length) {
+          <div class="result-alert result-alert--error">
+            <mat-icon>error_outline</mat-icon>
+            <div>
+              <strong>Alertas críticos</strong>
+              @if (item.result.structuralRisks.length) {
+                <p>Risco estrutural (segurança): {{ item.result.structuralRisks.join(', ') }}</p>
+              }
+              @if (item.result.qualityRisks.length) {
+                <p>Risco de qualidade: {{ item.result.qualityRisks.join(', ') }}</p>
+              }
+            </div>
+          </div>
+        }
+
+        <div class="result-block">
+          <h3 class="result-block-title">Diagnóstico de maturidade</h3>
+          <p>{{ item.result.level.description }}</p>
+
+          <div class="level-example">
+            <strong>Exemplo de squad neste nível</strong>
+            <p>{{ item.result.level.example }}</p>
+          </div>
+
+          @if (item.result.level.evolution.length) {
+            <div class="level-evolution">
+              <strong>{{ item.result.level.level === 'N5' ? 'Como manter N5:' : 'Como evoluir para o próximo nível:' }}</strong>
+              <ol>
+                @for (step of item.result.level.evolution; track $index) {
+                  <li>{{ step }}</li>
                 }
+              </ol>
+            </div>
+          }
+        </div>
 
-                @if (currentResultToolSummary().length) {
-                  <mat-card appearance="outlined">
-                    <mat-card-header>
-                      <mat-card-subtitle>Ferramentas</mat-card-subtitle>
-                      <mat-card-title>Ferramentas associadas neste assessment</mat-card-title>
-                    </mat-card-header>
-                    <mat-card-content class="content-stack content-stack-tight">
-                      @for (tool of currentResultToolSummary(); track tool.toolId) {
-                        <div class="split-row">
-                          <span>{{ tool.name }}</span>
-                          <strong>{{ tool.count }}</strong>
-                        </div>
-                      }
-                    </mat-card-content>
-                  </mat-card>
-                }
+        @if (currentResultToolSummary().length) {
+          <div class="result-block result-block--compact">
+            <h3 class="result-block-title">Ferramentas associadas</h3>
+            @for (tool of currentResultToolSummary(); track tool.toolId) {
+              <div class="split-row">
+                <span>{{ tool.name }}</span>
+                <strong>{{ tool.count }}</strong>
+              </div>
+            }
+          </div>
+        }
 
-                <div class="result-grid">
-                  @for (dimension of item.result.dimensionScores; track dimension.code) {
-                    <mat-card appearance="outlined">
-                      <mat-card-header>
-                        <mat-card-subtitle>{{ dimension.code }}</mat-card-subtitle>
-                        <mat-card-title>{{ dimension.title }}</mat-card-title>
-                      </mat-card-header>
-                      <mat-card-content class="content-stack content-stack-tight">
-                        <div>{{ dimension.value | number: '1.2-2' }}</div>
-                        <p>{{ dimension.level.level }} - {{ dimension.level.label }}</p>
-                        <mat-divider></mat-divider>
-                        @for (capability of dimension.capabilities; track capability.code) {
-                          <div class="split-row">
-                            <span>{{ capability.title }}</span>
-                            <strong>{{ capability.value | number: '1.2-2' }}</strong>
-                          </div>
-                        }
-                      </mat-card-content>
-                    </mat-card>
+        <div class="result-block">
+          <h3 class="result-block-title">Desempenho por dimensão</h3>
+          <div class="dimension-grid">
+            @for (dimension of item.result.dimensionScores; track dimension.code) {
+              <div class="dimension-cell" [style.border-left-color]="getLevelColor(dimension.level.level)">
+                <div class="dim-cell-head">
+                  <span class="dim-badge">{{ dimension.code }}</span>
+                  <span class="dim-cell-name">{{ dimension.title }}</span>
+                </div>
+                <div class="dim-cell-metrics">
+                  <div class="dim-score-line">
+                    <span class="dim-big-score">{{ dimension.value | number: '1.2-2' }}</span>
+                    <span class="dim-big-max">/4.00</span>
+                  </div>
+                  <span class="dim-level-tag">{{ dimension.level.level }} - {{ dimension.level.label }}</span>
+                </div>
+                <div class="dim-caps">
+                  @for (capability of dimension.capabilities; track capability.code) {
+                    <div class="split-row">
+                      <span>{{ capability.title }}</span>
+                      <strong>{{ capability.value | number: '1.2-2' }}</strong>
+                    </div>
                   }
                 </div>
-              </mat-card-content>
-            </mat-card>
-          }
-        </mat-card-content>
-      </mat-card>
+              </div>
+            }
+          </div>
+        </div>
+      }
     }
   </section>
 </main>
+
+<ng-template #levelsHelpRef>
+  <h2 mat-dialog-title>Níveis de Maturidade em IA</h2>
+  <mat-dialog-content class="help-dialog-content">
+    <div class="help-section">
+      <h4>Como funciona a pontuação</h4>
+      <p>
+        O assessment avalia <strong>44 questões</strong> distribuídas em <strong>7 dimensões</strong>.
+        Cada questão recebe uma nota de 0 a 4. O score geral é a média ponderada das dimensões.
+      </p>
+      <p>
+        Dimensões críticas como <strong>Qualidade (D3)</strong> e <strong>Segurança (D4)</strong>
+        possuem regras de <em>gating</em>: mesmo com score alto, o nível final pode ser limitado
+        se essas áreas estiverem abaixo de um patamar mínimo.
+      </p>
+    </div>
+
+    <div class="help-section">
+      <h4>Os 5 níveis</h4>
+      <div class="help-levels">
+        @for (lvl of catalog().manifest.levelThresholds; track lvl.level) {
+          <div class="help-level-row">
+            <span class="help-level-badge" [style.background]="getLevelColor(lvl.level)">
+              {{ lvl.level }}
+            </span>
+            <div class="help-level-body">
+              <strong>{{ lvl.label }}</strong>
+              <span class="help-level-range">({{ lvl.min | number:'1.1-1' }} – {{ lvl.max | number:'1.1-1' }})</span>
+              <p>{{ lvl.description }}</p>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="help-section">
+      <h4>Escala de cada questão (0–4)</h4>
+      <table class="help-scale-table">
+        <tbody>
+          <tr><td><strong>0</strong></td><td>Não praticado</td></tr>
+          <tr><td><strong>1</strong></td><td>Uso pontual/isolado</td></tr>
+          <tr><td><strong>2</strong></td><td>Praticado por parte da squad</td></tr>
+          <tr><td><strong>3</strong></td><td>Padrão da squad, com evidência</td></tr>
+          <tr><td><strong>4</strong></td><td>Institucionalizado e em melhoria contínua</td></tr>
+        </tbody>
+      </table>
+      <p class="help-note">
+        Notas 3 e 4 exigem evidência objetiva no campo correspondente.
+      </p>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Fechar</button>
+  </mat-dialog-actions>
+</ng-template>

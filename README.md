@@ -10,7 +10,7 @@ Aplicação Angular para gestão de times, assessments e resultados de maturidad
 - Associação de uma ou mais ferramentas por pergunta
 - Resultados com score, nível e sumário de ferramentas mais associadas
 - Persistência local em `localStorage`
-- Exportação em JSON e CSV
+- Exportação e importação em JSON (arquivo de exemplo: `ai-maturity/example-import.json`)
 
 ## Estrutura
 

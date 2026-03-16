@@ -1,0 +1,103 @@
+{
+  "version": "v2",
+  "selectedTeamId": "team-exemplo-1",
+  "teams": [
+    {
+      "id": "team-exemplo-1",
+      "name": "Squad Produto",
+      "sector": "Engenharia",
+      "description": "Time de produto e plataforma.",
+      "createdAt": "2026-03-01T10:00:00.000Z",
+      "updatedAt": "2026-03-01T10:00:00.000Z"
+    },
+    {
+      "id": "team-exemplo-2",
+      "name": "Squad Experiencia",
+      "sector": "Engenharia",
+      "description": "Time de front-end e UX.",
+      "createdAt": "2026-03-01T10:00:00.000Z",
+      "updatedAt": "2026-03-01T10:00:00.000Z"
+    }
+  ],
+  "tools": [
+    {
+      "id": "tool-exemplo-1",
+      "name": "GitHub Copilot",
+      "vendor": "GitHub",
+      "category": "IDE",
+      "status": "approved",
+      "description": "Assistente de codigo no IDE.",
+      "createdAt": "2026-03-01T10:00:00.000Z",
+      "updatedAt": "2026-03-01T10:00:00.000Z"
+    },
+    {
+      "id": "tool-exemplo-2",
+      "name": "Cursor",
+      "vendor": "Cursor",
+      "category": "IDE",
+      "status": "experimental",
+      "description": "Editor com IA integrada.",
+      "createdAt": "2026-03-01T10:00:00.000Z",
+      "updatedAt": "2026-03-01T10:00:00.000Z"
+    }
+  ],
+  "assessments": [
+    {
+      "id": "assessment-exemplo-1",
+      "teamId": "team-exemplo-1",
+      "frameworkVersion": "v1",
+      "assessor": "Maria Silva",
+      "summary": "Assessment de exemplo para importacao. Use este arquivo para testar a funcionalidade de importar JSON no app.",
+      "status": "finalized",
+      "createdAt": "2026-03-15T14:00:00.000Z",
+      "updatedAt": "2026-03-15T16:30:00.000Z",
+      "finalizedAt": "2026-03-15T16:30:00.000Z",
+      "responses": {
+        "Q1": { "score": 2, "evidence": "", "toolIds": ["tool-exemplo-1"] },
+        "Q2": { "score": 2, "evidence": "", "toolIds": ["tool-exemplo-1"] },
+        "Q3": { "score": 1, "evidence": "", "toolIds": [] },
+        "Q4": { "score": 3, "evidence": "Backlog priorizado por impacto no Jira; revisao trimestral com produto.", "toolIds": [] },
+        "Q5": { "score": 2, "evidence": "", "toolIds": ["tool-exemplo-1"] },
+        "Q6": { "score": 1, "evidence": "", "toolIds": [] },
+        "Q7": { "score": 0, "evidence": "", "toolIds": [] },
+        "Q8": { "score": 3, "evidence": "Copilot ativo para 100% dos devs; uso diario via telemetria.", "toolIds": ["tool-exemplo-1"] },
+        "Q9": { "score": 2, "evidence": "", "toolIds": [] },
+        "Q10": { "score": 1, "evidence": "", "toolIds": [] },
+        "Q11": { "score": 0, "evidence": "", "toolIds": [] },
+        "Q12": { "score": 2, "evidence": "", "toolIds": [] },
+        "Q13": { "score": 1, "evidence": "", "toolIds": [] },
+        "Q14": { "score": 0, "evidence": "", "toolIds": [] },
+        "Q15": { "score": 3, "evidence": "Checklist de PR inclui item 'Codigo IA revisado'; seguido pelo time.", "toolIds": [] },
+        "Q16": { "score": 3, "evidence": "Todos os PRs passam por CI (testes + linter); gate obrigatorio.", "toolIds": [] },
+        "Q17": { "score": 2, "evidence": "", "toolIds": [] },
+        "Q18": { "score": 2, "evidence": "", "toolIds": [] },
+        "Q19": { "score": 2, "evidence": "", "toolIds": [] },
+        "Q20": { "score": 1, "evidence": "", "toolIds": [] },
+        "Q21": { "score": 3, "evidence": "Politica de IA publicada no Confluence; lista de ferramentas aprovadas.", "toolIds": [] },
+        "Q22": { "score": 3, "evidence": "DLP ativo; treinamento anual sobre dados sensiveis.", "toolIds": [] },
+        "Q23": { "score": 2, "evidence": "", "toolIds": [] },
+        "Q24": { "score": 2, "evidence": "", "toolIds": [] },
+        "Q25": { "score": 2, "evidence": "", "toolIds": [] },
+        "Q26": { "score": 2, "evidence": "", "toolIds": [] },
+        "Q27": { "score": 2, "evidence": "", "toolIds": [] },
+        "Q28": { "score": 3, "evidence": "ADRs versionados no repo; template padrao.", "toolIds": [] },
+        "Q29": { "score": 2, "evidence": "", "toolIds": [] },
+        "Q30": { "score": 1, "evidence": "", "toolIds": [] },
+        "Q31": { "score": 2, "evidence": "", "toolIds": [] },
+        "Q32": { "score": 2, "evidence": "", "toolIds": [] },
+        "Q33": { "score": 3, "evidence": "Workshop de 2h realizado; material no Confluence.", "toolIds": [] },
+        "Q34": { "score": 2, "evidence": "", "toolIds": [] },
+        "Q35": { "score": 2, "evidence": "", "toolIds": [] },
+        "Q36": { "score": 2, "evidence": "", "toolIds": [] },
+        "Q37": { "score": 3, "evidence": "Tech lead encoraja experimentacao; politica clara de uso.", "toolIds": [] },
+        "Q38": { "score": 2, "evidence": "", "toolIds": [] },
+        "Q39": { "score": 1, "evidence": "", "toolIds": [] },
+        "Q40": { "score": 1, "evidence": "", "toolIds": [] },
+        "Q41": { "score": 1, "evidence": "", "toolIds": [] },
+        "Q42": { "score": 2, "evidence": "", "toolIds": [] },
+        "Q43": { "score": 1, "evidence": "", "toolIds": [] },
+        "Q44": { "score": 2, "evidence": "", "toolIds": [] }
+      }
+    }
+  ]
+}

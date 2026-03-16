@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, computed, inject, signal, ViewChildren } from '@angular/core';
+import { Component, computed, inject, signal, TemplateRef, ViewChild, ViewChildren } from '@angular/core';
 import type { QueryList } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -20,6 +20,8 @@ import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatSortModule, Sort } from '@angular/material/sort';
 
 import { FrameworkCatalogService } from './core/framework/framework-catalog.service';
 import type {
@@ -99,7 +101,9 @@ function createDraftId(): string {
     MatTabsModule,
     MatTableModule,
     MatIconModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatDialogModule,
+    MatSortModule
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss'
@@ -110,8 +114,10 @@ export class App {
   private readonly scoringService = inject(AssessmentScoringService);
   private readonly exportService = inject(ExportService);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly dialog = inject(MatDialog);
 
   @ViewChildren(MatExpansionPanel) private dimensionPanels!: QueryList<MatExpansionPanel>;
+  @ViewChild('levelsHelpRef') private levelsHelpRef!: TemplateRef<unknown>;
 
   protected readonly catalog = signal<FrameworkCatalog>(this.catalogService.getCatalog());
   protected readonly activeView = signal<'teams' | 'tools' | 'assessment' | 'results'>('teams');
@@ -141,6 +147,13 @@ export class App {
   protected readonly assessmentFormStep = signal<'metadata' | 'questions'>('metadata');
   protected readonly resultViewMode = signal<'list' | 'detail'>('list');
   protected readonly selectedResultAssessmentId = signal<string | null>(null);
+  protected readonly resultsSort = signal<{
+    active: 'finalizedAt' | 'level' | 'score';
+    direction: 'asc' | 'desc';
+  }>({
+    active: 'finalizedAt',
+    direction: 'desc'
+  });
   protected readonly teamPageIndex = signal(0);
   protected readonly teamPageSize = signal(5);
   protected readonly toolPageIndex = signal(0);
@@ -254,6 +267,27 @@ export class App {
       ({ assessment }) => assessment.status === 'finalized'
     )
   );
+  protected readonly sortedFinalizedAssessments = computed(() => {
+    const items = [...this.finalizedAssessments()];
+    const sort = this.resultsSort();
+    const direction = sort.direction === 'asc' ? 1 : -1;
+
+    return items.sort((left, right) => {
+      if (sort.active === 'score') {
+        return (left.result.overallScore - right.result.overallScore) * direction;
+      }
+
+      if (sort.active === 'level') {
+        const leftLevel = Number(left.result.level.level.replace('N', ''));
+        const rightLevel = Number(right.result.level.level.replace('N', ''));
+        return (leftLevel - rightLevel) * direction;
+      }
+
+      const leftDate = left.assessment.finalizedAt ?? left.assessment.updatedAt;
+      const rightDate = right.assessment.finalizedAt ?? right.assessment.updatedAt;
+      return leftDate.localeCompare(rightDate) * direction;
+    });
+  });
   protected readonly currentResultDetail = computed(() => {
     const assessmentId = this.selectedResultAssessmentId();
     return this.finalizedAssessments().find(
@@ -787,6 +821,12 @@ export class App {
     this.resultViewMode.set('detail');
   }
 
+  protected onResultsSortChange(sort: Sort): void {
+    const active = (sort.active || 'finalizedAt') as 'finalizedAt' | 'level' | 'score';
+    const direction = (sort.direction || 'desc') as 'asc' | 'desc';
+    this.resultsSort.set({ active, direction });
+  }
+
   protected backToAssessmentList(): void {
     this.assessmentViewMode.set('list');
   }
@@ -794,6 +834,25 @@ export class App {
   protected backToResultsList(): void {
     this.resultViewMode.set('list');
     this.selectedResultAssessmentId.set(null);
+  }
+
+  protected openLevelsHelp(): void {
+    this.dialog.open(this.levelsHelpRef, {
+      width: '640px',
+      maxHeight: '85vh',
+      autoFocus: false
+    });
+  }
+
+  protected getLevelColor(level: string): string {
+    const colors: Record<string, string> = {
+      N1: '#ef5350',
+      N2: '#ff9800',
+      N3: '#42a5f5',
+      N4: '#66bb6a',
+      N5: '#26a69a'
+    };
+    return colors[level] ?? '#9e9e9e';
   }
 
   protected exportJson(): void {
