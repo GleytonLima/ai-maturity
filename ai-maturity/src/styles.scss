@@ -6,6 +6,7 @@
   display: flex;
   flex-wrap: nowrap;
   align-items: stretch;
+  overflow: visible;
 }
 
 .score-group .mat-button-toggle {
@@ -14,6 +15,11 @@
   overflow: hidden;
   min-height: 52px;
   flex: 1;
+  margin-left: 0;
+}
+
+.score-group .mat-button-toggle:first-child {
+  border-left: 1px solid var(--mat-standard-button-toggle-divider-color, rgba(0, 0, 0, 0.12));
 }
 
 .score-group .mat-button-toggle-checked {
