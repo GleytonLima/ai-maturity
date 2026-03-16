@@ -41,3 +41,4 @@ npm run test -- --watch=false
 - Build e testes estão passando
 - O bundle inicial ainda está acima do budget configurado
 - A próxima melhoria estrutural recomendada é separar `Times`, `Ferramentas`, `Assessment` e `Resultados` em componentes/rotas próprias
+
