@@ -698,14 +698,12 @@ export const FRAMEWORK_CATALOG: FrameworkCatalog = {
             {
               "code": "Q42",
               "prompt": "A squad compara percepcoes sobre ganho com IA com resultados observaveis, evitando metricas de vaidade?",
-              "hint": "Embora o time ache que esta mais rapido, a squad verifica com dados se o lead time e a taxa de defeitos realmente melhoraram.",
-              "scoreProfile": "data_driven_decisioning"
+              "hint": "Embora o time ache que esta mais rapido, a squad verifica com dados se o lead time e a taxa de defeitos realmente melhoraram."
             },
             {
               "code": "Q43",
               "prompt": "A squad usa essas metricas para priorizar onde expandir, limitar ou ajustar o uso de IA?",
-              "hint": "Apos ver que IA em testes gerou boa cobertura mas em docs gerou conteudo de baixa qualidade, a squad decidiu investir mais em testes e ajustar o processo de docs.",
-              "scoreProfile": "data_driven_decisioning"
+              "hint": "Apos ver que IA em testes gerou boa cobertura mas em docs gerou conteudo de baixa qualidade, a squad decidiu investir mais em testes e ajustar o processo de docs."
             },
             {
               "code": "Q44",

@@ -2,7 +2,6 @@
   "code": "Q42",
   "prompt": "A squad compara percepcoes sobre ganho com IA com resultados observaveis, evitando metricas de vaidade?",
   "hint": "Embora o time ache que esta mais rapido, a squad verifica com dados se o lead time e a taxa de defeitos realmente melhoraram.",
-  "scoreProfile": "data_driven_decisioning",
   "dimensionCode": "D7",
   "capacityCode": "D7C2"
 }
