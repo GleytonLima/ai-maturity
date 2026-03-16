@@ -1,6 +1,7 @@
 {
   "code": "Q22",
-  "prompt": "Existe trilha de auditoria ou registro minimo do uso de IA em artefatos relevantes?",
+  "prompt": "A squad entende e aplica regras sobre privacidade, segredos, dados sensiveis e vazamento de informacao?",
+  "hint": "Devs sabem que nao podem colar tokens, secrets ou dados de clientes em prompts; ha DLP configurado para bloquear isso.",
   "dimensionCode": "D4",
-  "capacityCode": "D4C2"
+  "capacityCode": "D4C1"
 }

@@ -1,6 +1,7 @@
 {
   "code": "Q39",
-  "prompt": "A squad mede impacto em qualidade e estabilidade, como defeitos, incidentes, retrabalho ou debt?",
+  "prompt": "A squad mede adocao e intensidade de uso de IA por meio de telemetria ou dados objetivos?",
+  "hint": "A squad acompanha DAU do Copilot, taxa de aceitacao de sugestoes e volume de interacoes no chat do assistente.",
   "dimensionCode": "D7",
   "capacityCode": "D7C1"
 }

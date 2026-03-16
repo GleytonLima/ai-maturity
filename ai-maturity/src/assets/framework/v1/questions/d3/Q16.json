@@ -1,6 +1,7 @@
 {
   "code": "Q16",
-  "prompt": "A squad controla o impacto da IA em complexidade, manutenibilidade e divida tecnica?",
+  "prompt": "Mudancas geradas com IA passam por testes automatizados, validacoes e gates confiaveis?",
+  "hint": "Todo PR, independente de ser humano ou IA, precisa passar pela suite de testes, linter e SAST antes de ser mergeado.",
   "dimensionCode": "D3",
-  "capacityCode": "D3C2"
+  "capacityCode": "D3C1"
 }

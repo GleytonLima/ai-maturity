@@ -14,92 +14,46 @@
     "min": 0,
     "max": 4,
     "labels": {
-      "0": "Inexistente ou proibido",
-      "1": "Ad-hoc e isolado",
-      "2": "Parcial",
-      "3": "Padronizado com evidencia",
+      "0": "Nao praticado",
+      "1": "Poucos fazem, sem padrao",
+      "2": "Time faz, sem consistencia",
+      "3": "Padronizado e documentado",
       "4": "Medido e otimizado"
+    },
+    "hints": {
+      "0": "Ninguem no time faz isso, ou e proibido pela organizacao.",
+      "1": "1-2 pessoas fazem por conta propria, sem orientacao nem visibilidade para o time.",
+      "2": "O time adotou a pratica, mas cada pessoa faz de um jeito diferente, sem padrao definido.",
+      "3": "Existe um padrao claro, documentado e seguido pelo time, com evidencias objetivas.",
+      "4": "Alem de padronizado, o time mede resultados e ajusta a pratica continuamente com base em dados."
     }
   },
   "scoring": {
     "question": "score direto de 0 a 4",
-    "capability": "media simples de 3 perguntas",
+    "capability": "media simples das perguntas da capacidade",
     "dimension": "media simples de 2 capacidades",
     "overall": "media ponderada das 7 dimensoes"
   },
   "levelThresholds": [
-    {
-      "min": 0,
-      "max": 0.9,
-      "level": "N1",
-      "label": "Ad-hoc"
-    },
-    {
-      "min": 1,
-      "max": 1.9,
-      "level": "N2",
-      "label": "Assistido"
-    },
-    {
-      "min": 2,
-      "max": 2.9,
-      "level": "N3",
-      "label": "Padronizado"
-    },
-    {
-      "min": 3,
-      "max": 3.6,
-      "level": "N4",
-      "label": "Otimizado"
-    },
-    {
-      "min": 3.7,
-      "max": 4,
-      "level": "N5",
-      "label": "IA-nativo"
-    }
+    { "min": 0, "max": 0.9, "level": "N1", "label": "Ad-hoc" },
+    { "min": 1, "max": 1.9, "level": "N2", "label": "Assistido" },
+    { "min": 2, "max": 2.9, "level": "N3", "label": "Padronizado" },
+    { "min": 3, "max": 3.6, "level": "N4", "label": "Otimizado" },
+    { "min": 3.7, "max": 4, "level": "N5", "label": "IA-nativo" }
   ],
   "gating": {
     "maxLevelIfBelow": [
-      {
-        "dimensionCode": "D3",
-        "threshold": 2,
-        "level": "N2",
-        "reason": "Qualidade abaixo do minimo para escalar o uso de IA."
-      },
-      {
-        "dimensionCode": "D4",
-        "threshold": 2,
-        "level": "N2",
-        "reason": "Seguranca abaixo do minimo para escalar o uso de IA."
-      }
+      { "dimensionCode": "D3", "threshold": 2, "level": "N2", "reason": "Qualidade abaixo do minimo para escalar o uso de IA." },
+      { "dimensionCode": "D4", "threshold": 2, "level": "N2", "reason": "Seguranca abaixo do minimo para escalar o uso de IA." }
     ],
     "requiredForAdvancedLevels": [
-      {
-        "dimensionCode": "D3",
-        "threshold": 3
-      },
-      {
-        "dimensionCode": "D4",
-        "threshold": 3
-      },
-      {
-        "dimensionCode": "D7",
-        "threshold": 2.5
-      }
+      { "dimensionCode": "D3", "threshold": 3 },
+      { "dimensionCode": "D4", "threshold": 3 },
+      { "dimensionCode": "D7", "threshold": 2.5 }
     ]
   },
   "alerts": {
-    "structuralRisk": [
-      "Q19",
-      "Q20",
-      "Q22",
-      "Q23"
-    ],
-    "qualityRisk": [
-      "Q13",
-      "Q14",
-      "Q16"
-    ]
+    "structuralRisk": ["Q21", "Q22", "Q24", "Q25"],
+    "qualityRisk": ["Q15", "Q16", "Q18"]
   }
 }

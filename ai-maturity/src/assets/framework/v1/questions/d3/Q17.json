@@ -1,6 +1,7 @@
 {
   "code": "Q17",
-  "prompt": "A squad mantem pequenos lotes, disciplina de versionamento e clareza de autoria ao usar IA?",
+  "prompt": "A squad consegue usar IA sem aumentar de forma relevante retrabalho, defeitos ou instabilidade?",
+  "hint": "A taxa de rollback e bugs em producao nao subiu apos a adocao de IA; a squad monitora isso explicitamente.",
   "dimensionCode": "D3",
-  "capacityCode": "D3C2"
+  "capacityCode": "D3C1"
 }

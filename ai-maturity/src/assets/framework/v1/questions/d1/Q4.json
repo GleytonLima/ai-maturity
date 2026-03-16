@@ -1,6 +1,7 @@
 {
   "code": "Q4",
-  "prompt": "A squad usa IA para geracao, manutencao, priorizacao ou analise de testes e QA?",
+  "prompt": "O produto e o backlog da squad sao orientados por necessidades e resultados do usuario, garantindo que a aceleracao com IA nao desvie o foco do valor entregue?",
+  "hint": "O backlog prioriza itens com base em impacto para o usuario (ex.: NPS, metricas de uso), e a squad valida se o que a IA acelerou de fato resolve o problema certo.",
   "dimensionCode": "D1",
-  "capacityCode": "D1C2"
+  "capacityCode": "D1C1"
 }

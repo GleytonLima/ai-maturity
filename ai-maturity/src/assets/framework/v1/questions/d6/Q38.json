@@ -1,0 +1,7 @@
+{
+  "code": "Q38",
+  "prompt": "A squad realiza retrospectivas, revisoes ou ciclos de aprendizado especificos sobre uso de IA?",
+  "hint": "Na retrospectiva de sprint, ha um item fixo: 'O que aprendemos sobre uso de IA neste ciclo? O que funcionou e o que devemos ajustar?'",
+  "dimensionCode": "D6",
+  "capacityCode": "D6C2"
+}

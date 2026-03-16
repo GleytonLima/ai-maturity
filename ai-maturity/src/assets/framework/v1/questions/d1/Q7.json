@@ -1,0 +1,7 @@
+{
+  "code": "Q7",
+  "prompt": "A squad usa IA em operacao, observabilidade, incidentes, troubleshooting ou runbooks?",
+  "hint": "Durante um incidente, a squad usa IA para correlacionar logs e metricas e sugerir causa raiz, ou para gerar rascunho do postmortem.",
+  "dimensionCode": "D1",
+  "capacityCode": "D1C2"
+}

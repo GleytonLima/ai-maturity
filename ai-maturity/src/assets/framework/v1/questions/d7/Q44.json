@@ -1,0 +1,7 @@
+{
+  "code": "Q44",
+  "prompt": "A squad mantem feedback loops continuos para revisar praticas, ferramentas, controles e treinamento?",
+  "hint": "A cada trimestre, a squad revisa metricas, ajusta prompts/playbooks, atualiza a politica de uso e planeja proximos treinamentos com base nos gaps observados.",
+  "dimensionCode": "D7",
+  "capacityCode": "D7C2"
+}

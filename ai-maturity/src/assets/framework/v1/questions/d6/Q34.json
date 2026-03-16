@@ -1,6 +1,7 @@
 {
   "code": "Q34",
-  "prompt": "O time compartilha boas praticas, prompts, exemplos, aprendizados e padroes de uso de IA?",
+  "prompt": "O uso de IA esta distribuido no time, em vez de concentrado em poucos power users?",
+  "hint": "Telemetria mostra que 80% do time usa IA semanalmente, nao so 1-2 pessoas; pair programming com IA e incentivado.",
   "dimensionCode": "D6",
-  "capacityCode": "D6C2"
+  "capacityCode": "D6C1"
 }

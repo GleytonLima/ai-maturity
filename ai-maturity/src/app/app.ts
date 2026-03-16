@@ -16,7 +16,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabChangeEvent, MatTabsModule } from '@angular/material/tabs';
 import { MatTableModule } from '@angular/material/table';
+import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { FrameworkCatalogService } from './core/framework/framework-catalog.service';
 import type {
@@ -92,7 +94,9 @@ function createDraftId(): string {
     MatSelectModule,
     MatSnackBarModule,
     MatTabsModule,
-    MatTableModule
+    MatTableModule,
+    MatIconModule,
+    MatTooltipModule
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss'
@@ -272,14 +276,16 @@ export class App {
 
     return Math.round(((total - this.unansweredCount()) / total) * 100);
   });
-  protected readonly scoreOptions = computed(() =>
-    Object.entries(this.catalog().manifest.scale.labels)
+  protected readonly scoreOptions = computed(() => {
+    const { labels, hints } = this.catalog().manifest.scale;
+    return Object.entries(labels)
       .map(([value, label]) => ({
         value: Number(value),
-        label
+        label,
+        hint: hints[value] ?? ''
       }))
-      .sort((left, right) => left.value - right.value)
-  );
+      .sort((left, right) => left.value - right.value);
+  });
   protected readonly pagedTeams = computed(() => {
     const start = this.teamPageIndex() * this.teamPageSize();
     return this.teams().slice(start, start + this.teamPageSize());
@@ -504,7 +510,6 @@ export class App {
     this.assessmentViewMode.set('form');
     this.assessmentFormStep.set('metadata');
     this.draft.set(this.createEmptyDraft());
-    this.announce('Novo assessment iniciado.');
     this.activeView.set('assessment');
   }
 

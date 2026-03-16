@@ -1,0 +1,7 @@
+{
+  "code": "Q13",
+  "prompt": "A squad utiliza automacoes com IA no fluxo de trabalho, alem de uso manual em chat?",
+  "hint": "Um workflow automatizado usa IA para classificar bugs recem-abertos por severidade e atribuir ao time correto.",
+  "dimensionCode": "D2",
+  "capacityCode": "D2C2"
+}

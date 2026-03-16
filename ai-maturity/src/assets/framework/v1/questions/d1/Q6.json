@@ -1,6 +1,7 @@
 {
   "code": "Q6",
-  "prompt": "A squad usa IA em operacao, observabilidade, incidentes, troubleshooting ou runbooks?",
+  "prompt": "A squad usa IA em documentacao tecnica, documentacao de release ou artefatos operacionais?",
+  "hint": "Release notes e changelogs sao gerados automaticamente por IA a partir dos commits e revisados antes de publicar.",
   "dimensionCode": "D1",
   "capacityCode": "D1C2"
 }

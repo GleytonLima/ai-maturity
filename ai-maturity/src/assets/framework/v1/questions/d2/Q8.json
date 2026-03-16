@@ -1,6 +1,7 @@
 {
   "code": "Q8",
-  "prompt": "A IA esta integrada ao fluxo de PR, code review, backlog, issue tracking ou wiki?",
+  "prompt": "A IA esta integrada ao IDE ou ambiente principal de desenvolvimento de forma recorrente?",
+  "hint": "Copilot, Cursor ou Cody esta ativo no IDE da squad, e a maioria dos devs usa completions e chat no dia a dia.",
   "dimensionCode": "D2",
   "capacityCode": "D2C1"
 }

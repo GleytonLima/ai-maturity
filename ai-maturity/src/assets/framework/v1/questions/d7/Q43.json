@@ -1,0 +1,7 @@
+{
+  "code": "Q43",
+  "prompt": "A squad usa essas metricas para priorizar onde expandir, limitar ou ajustar o uso de IA?",
+  "hint": "Apos ver que IA em testes gerou boa cobertura mas em docs gerou conteudo de baixa qualidade, a squad decidiu investir mais em testes e ajustar o processo de docs.",
+  "dimensionCode": "D7",
+  "capacityCode": "D7C2"
+}

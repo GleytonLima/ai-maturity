@@ -5,6 +5,7 @@ export type ToolStatus = 'approved' | 'experimental' | 'restricted';
 export interface FrameworkQuestion {
   code: string;
   prompt: string;
+  hint: string;
 }
 
 export interface FrameworkCapacity {
@@ -25,6 +26,9 @@ export interface LevelThreshold {
   max: number;
   level: LevelCode;
   label: string;
+  description: string;
+  example: string;
+  evolution: string[];
 }
 
 export interface FrameworkCatalog {
@@ -38,6 +42,7 @@ export interface FrameworkCatalog {
       min: number;
       max: number;
       labels: Record<string, string>;
+      hints: Record<string, string>;
     };
     scoring: {
       question: string;

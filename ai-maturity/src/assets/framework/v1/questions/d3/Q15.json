@@ -1,6 +1,7 @@
 {
   "code": "Q15",
-  "prompt": "A squad consegue usar IA sem aumentar de forma relevante retrabalho, defeitos ou instabilidade?",
+  "prompt": "Outputs gerados com IA passam por revisao humana explicita, com criterios adaptados para IA?",
+  "hint": "O checklist de PR inclui itens como 'Codigo gerado por IA foi revisado quanto a logica, seguranca e alinhamento com padroes do time?'",
   "dimensionCode": "D3",
   "capacityCode": "D3C1"
 }

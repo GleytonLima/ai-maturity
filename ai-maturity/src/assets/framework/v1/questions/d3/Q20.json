@@ -1,0 +1,7 @@
+{
+  "code": "Q20",
+  "prompt": "A squad monitora o comportamento de mudancas assistidas por IA apos merge ou deploy?",
+  "hint": "Apos deploy de codigo assistido por IA, a squad verifica metricas de erro e latencia nas primeiras horas, com alerta configurado.",
+  "dimensionCode": "D3",
+  "capacityCode": "D3C2"
+}

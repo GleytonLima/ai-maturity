@@ -1,6 +1,7 @@
 {
   "code": "Q28",
-  "prompt": "A squad oferece a IA acesso a contexto interno seguro, como docs, codigo, padroes e historico relevante?",
+  "prompt": "A squad documenta decisoes importantes de forma que o conhecimento possa ser reutilizado posteriormente?",
+  "hint": "Toda decisao arquitetural relevante vira um ADR versionado no repositorio, acessivel tanto para humanos quanto para ferramentas de IA.",
   "dimensionCode": "D5",
-  "capacityCode": "D5C2"
+  "capacityCode": "D5C1"
 }

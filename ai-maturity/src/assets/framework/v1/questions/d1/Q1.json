@@ -1,6 +1,7 @@
 {
   "code": "Q1",
   "prompt": "A squad usa IA em discovery, pesquisa, ideacao ou entendimento do problema?",
+  "hint": "A squad usa um LLM para analisar entrevistas de usuarios e gerar hipoteses de problema antes de definir a solucao.",
   "dimensionCode": "D1",
   "capacityCode": "D1C1"
 }

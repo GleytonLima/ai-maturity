@@ -1,6 +1,7 @@
 {
   "code": "Q9",
-  "prompt": "A IA esta integrada ao pipeline de CI/CD, automacoes de qualidade ou gates tecnicos?",
+  "prompt": "A IA esta integrada ao fluxo de PR, code review, backlog, issue tracking ou wiki?",
+  "hint": "Um bot de code review (ex.: CodeRabbit, PR-Agent) comenta automaticamente nos PRs com sugestoes e checklist.",
   "dimensionCode": "D2",
   "capacityCode": "D2C1"
 }

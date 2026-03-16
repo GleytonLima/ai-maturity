@@ -1,0 +1,7 @@
+{
+  "code": "Q19",
+  "prompt": "A squad mantem pequenos lotes, disciplina de versionamento e clareza de autoria ao usar IA?",
+  "hint": "PRs gerados com assistencia de IA sao pequenos (< 400 linhas), com commits atomicos e mensagem indicando que IA participou.",
+  "dimensionCode": "D3",
+  "capacityCode": "D3C2"
+}

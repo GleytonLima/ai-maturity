@@ -1,6 +1,7 @@
 {
   "code": "Q3",
   "prompt": "A squad usa IA para apoiar design e decisoes de arquitetura, incluindo alternativas e trade-offs?",
+  "hint": "Antes de um ADR, a squad usa IA para comparar trade-offs entre duas abordagens (ex.: REST vs gRPC) com pros/contras documentados.",
   "dimensionCode": "D1",
   "capacityCode": "D1C1"
 }

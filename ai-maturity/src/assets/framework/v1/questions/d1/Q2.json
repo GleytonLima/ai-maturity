@@ -1,6 +1,7 @@
 {
   "code": "Q2",
   "prompt": "A squad usa IA para refinar requisitos, criterios de aceitacao ou reduzir ambiguidades?",
+  "hint": "Ao escrever uma user story, a squad pede a IA para sugerir criterios de aceitacao faltantes e identificar cenarios de borda.",
   "dimensionCode": "D1",
   "capacityCode": "D1C1"
 }

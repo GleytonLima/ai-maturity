@@ -1,6 +1,7 @@
 {
   "code": "Q24",
-  "prompt": "Existem controles operacionais ou tecnicos para prevenir uso inseguro de IA no fluxo de desenvolvimento?",
+  "prompt": "Existe trilha de auditoria ou registro minimo do uso de IA em artefatos relevantes?",
+  "hint": "PRs com assistencia de IA sao tagueados com label 'ai-assisted' e o template de PR tem campo obrigatorio 'IA utilizada: sim/nao'.",
   "dimensionCode": "D4",
   "capacityCode": "D4C2"
 }

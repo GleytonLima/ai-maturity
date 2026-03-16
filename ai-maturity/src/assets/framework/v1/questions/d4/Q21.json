@@ -1,6 +1,7 @@
 {
   "code": "Q21",
-  "prompt": "A squad considera riscos de IP, licenciamento, direitos autorais e origem do conteudo gerado por IA?",
+  "prompt": "Existe politica clara sobre ferramentas de IA permitidas, usos proibidos e tipos de dados restritos?",
+  "hint": "A empresa publicou uma politica que lista ferramentas aprovadas (ex.: Copilot Enterprise), proibe uso de modelos publicos com codigo proprietario, e define dados PII como restritos.",
   "dimensionCode": "D4",
   "capacityCode": "D4C1"
 }

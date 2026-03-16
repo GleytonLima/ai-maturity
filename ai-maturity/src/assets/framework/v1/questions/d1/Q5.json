@@ -1,6 +1,7 @@
 {
   "code": "Q5",
-  "prompt": "A squad usa IA em documentacao tecnica, documentacao de release ou artefatos operacionais?",
+  "prompt": "A squad usa IA para geracao, manutencao, priorizacao ou analise de testes e QA?",
+  "hint": "A squad usa IA para gerar testes unitarios a partir de codigo novo e para sugerir quais testes rodar primeiro com base no diff do PR.",
   "dimensionCode": "D1",
   "capacityCode": "D1C2"
 }

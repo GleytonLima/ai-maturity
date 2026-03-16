@@ -1,6 +1,7 @@
 {
   "code": "Q27",
-  "prompt": "A squad consegue responder duvidas tecnicas relevantes com rapidez usando base interna e contexto confiavel?",
+  "prompt": "A documentacao e o conhecimento interno sao encontraveis, atualizados e uteis para humanos e IA?",
+  "hint": "A wiki do time e atualizada a cada sprint e aparece nos primeiros resultados ao buscar termos-chave no portal interno.",
   "dimensionCode": "D5",
   "capacityCode": "D5C1"
 }

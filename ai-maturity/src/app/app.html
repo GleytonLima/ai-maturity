@@ -506,9 +506,23 @@
                             @for (question of capacity.questions; track question.code) {
                               <mat-card appearance="outlined">
                                 <mat-card-content class="content-stack">
-                                  <div>
-                                    <p>{{ question.code }}</p>
-                                    <p>{{ question.prompt }}</p>
+                                  <div class="question-header">
+                                    <div>
+                                      <p><strong>{{ question.code }}</strong></p>
+                                      <p>{{ question.prompt }}</p>
+                                    </div>
+                                    @if (question.hint) {
+                                      <button
+                                        mat-icon-button
+                                        type="button"
+                                        class="hint-button"
+                                        [matTooltip]="'Exemplo: ' + question.hint"
+                                        matTooltipPosition="above"
+                                        matTooltipClass="hint-tooltip"
+                                      >
+                                        <mat-icon>help_outline</mat-icon>
+                                      </button>
+                                    }
                                   </div>
 
                                   <mat-button-toggle-group
@@ -518,7 +532,12 @@
                                     aria-label="Nota da pergunta"
                                   >
                                     @for (option of scoreOptions(); track option.value) {
-                                      <mat-button-toggle [value]="option.value">
+                                      <mat-button-toggle
+                                        [value]="option.value"
+                                        [matTooltip]="option.hint"
+                                        matTooltipPosition="above"
+                                        matTooltipClass="hint-tooltip"
+                                      >
                                         {{ option.value }} - {{ option.label }}
                                       </mat-button-toggle>
                                     }
@@ -687,6 +706,73 @@
                 <p>Time: {{ getTeamName(item.assessment.teamId) }}</p>
                 <p>Score geral: {{ item.result.overallScore | number: '1.2-2' }}</p>
 
+                <mat-card appearance="outlined" class="level-detail-card">
+                  <mat-card-header>
+                    <mat-card-subtitle>Diagnóstico de maturidade</mat-card-subtitle>
+                    <mat-card-title>{{ item.result.level.level }} — {{ item.result.level.label }}</mat-card-title>
+                  </mat-card-header>
+                  <mat-card-content class="content-stack">
+                    <p>{{ item.result.level.description }}</p>
+
+                    <div class="level-example">
+                      <p><strong>Exemplo de squad neste nível:</strong></p>
+                      <p>{{ item.result.level.example }}</p>
+                    </div>
+
+                    @if (item.result.level.evolution.length) {
+                      <div class="level-evolution">
+                        <p>
+                          <strong>
+                            {{ item.result.level.level === 'N5' ? 'Como manter N5:' : 'Como evoluir para o próximo nível:' }}
+                          </strong>
+                        </p>
+                        <ol>
+                          @for (step of item.result.level.evolution; track $index) {
+                            <li>{{ step }}</li>
+                          }
+                        </ol>
+                      </div>
+                    }
+                  </mat-card-content>
+                </mat-card>
+
+                @if (item.result.gatingReasons.length) {
+                  <mat-card appearance="outlined" class="gating-card">
+                    <mat-card-header>
+                      <mat-card-subtitle>Restrições de gating</mat-card-subtitle>
+                      <mat-card-title>O nível foi limitado por regras estruturais</mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content class="content-stack content-stack-tight">
+                      @if (item.result.rawLevel.level !== item.result.level.level) {
+                        <p>
+                          Nível bruto pelo score: <strong>{{ item.result.rawLevel.level }} — {{ item.result.rawLevel.label }}</strong>.
+                          Limitado a <strong>{{ item.result.level.level }}</strong> pelas regras abaixo:
+                        </p>
+                      }
+                      @for (reason of item.result.gatingReasons; track reason) {
+                        <p>⚠️ {{ reason }}</p>
+                      }
+                    </mat-card-content>
+                  </mat-card>
+                }
+
+                @if (item.result.structuralRisks.length || item.result.qualityRisks.length) {
+                  <mat-card appearance="outlined" class="risk-card">
+                    <mat-card-header>
+                      <mat-card-subtitle>Alertas críticos</mat-card-subtitle>
+                      <mat-card-title>Perguntas com score zero em áreas críticas</mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content class="content-stack content-stack-tight">
+                      @if (item.result.structuralRisks.length) {
+                        <p>🔴 <strong>Risco estrutural (segurança):</strong> {{ item.result.structuralRisks.join(', ') }}</p>
+                      }
+                      @if (item.result.qualityRisks.length) {
+                        <p>🟠 <strong>Risco de qualidade:</strong> {{ item.result.qualityRisks.join(', ') }}</p>
+                      }
+                    </mat-card-content>
+                  </mat-card>
+                }
+
                 @if (currentResultToolSummary().length) {
                   <mat-card appearance="outlined">
                     <mat-card-header>
@@ -702,14 +788,6 @@
                       }
                     </mat-card-content>
                   </mat-card>
-                }
-
-                @if (item.result.gatingReasons.length) {
-                  <div>
-                    @for (reason of item.result.gatingReasons; track reason) {
-                      <p>{{ reason }}</p>
-                    }
-                  </div>
                 }
 
                 <div class="result-grid">

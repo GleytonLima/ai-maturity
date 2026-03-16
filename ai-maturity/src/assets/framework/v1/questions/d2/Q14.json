@@ -1,0 +1,7 @@
+{
+  "code": "Q14",
+  "prompt": "A squad utiliza agentes ou assistentes com autonomia delimitada e supervisao humana?",
+  "hint": "Um agente de coding (ex.: Cursor Agent, Devin) executa tarefas tecnicas com escopo definido, mas toda mudanca passa por review humano antes do merge.",
+  "dimensionCode": "D2",
+  "capacityCode": "D2C2"
+}

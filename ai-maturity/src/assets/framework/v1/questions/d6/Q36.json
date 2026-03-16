@@ -1,6 +1,7 @@
 {
   "code": "Q36",
-  "prompt": "A squad realiza retrospectivas, revisoes ou ciclos de aprendizado especificos sobre uso de IA?",
+  "prompt": "O time compartilha boas praticas, prompts, exemplos, aprendizados e padroes de uso de IA?",
+  "hint": "A squad tem um canal no Slack/Teams onde compartilha prompts que funcionaram bem, truques e anti-patterns descobertos.",
   "dimensionCode": "D6",
   "capacityCode": "D6C2"
 }

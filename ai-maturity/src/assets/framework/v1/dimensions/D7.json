@@ -6,38 +6,12 @@
     {
       "code": "D7C1",
       "title": "Telemetria e outcomes",
-      "questions": [
-        {
-          "code": "Q37",
-          "prompt": "A squad mede adocao e intensidade de uso de IA por meio de telemetria ou dados objetivos?"
-        },
-        {
-          "code": "Q38",
-          "prompt": "A squad mede impacto em fluxo de engenharia, como review speed, lead time, throughput ou cycle time?"
-        },
-        {
-          "code": "Q39",
-          "prompt": "A squad mede impacto em qualidade e estabilidade, como defeitos, incidentes, retrabalho ou debt?"
-        }
-      ]
+      "questions": ["Q39", "Q40", "Q41"]
     },
     {
       "code": "D7C2",
       "title": "Aprendizado orientado a dados",
-      "questions": [
-        {
-          "code": "Q40",
-          "prompt": "A squad compara percepcoes sobre ganho com IA com resultados observaveis, evitando metricas de vaidade?"
-        },
-        {
-          "code": "Q41",
-          "prompt": "A squad usa essas metricas para priorizar onde expandir, limitar ou ajustar o uso de IA?"
-        },
-        {
-          "code": "Q42",
-          "prompt": "A squad mantem feedback loops continuos para revisar praticas, ferramentas, controles e treinamento?"
-        }
-      ]
+      "questions": ["Q42", "Q43", "Q44"]
     }
   ]
 }

@@ -1,6 +1,7 @@
 {
   "code": "Q30",
-  "prompt": "A qualidade, atualizacao e ownership dos dados e conhecimento sao tratadas como fundamento para uso eficaz da IA?",
+  "prompt": "A squad oferece a IA acesso a contexto interno seguro, como docs, codigo, padroes e historico relevante?",
+  "hint": "O assistente de IA esta conectado ao repositorio e a wiki interna via RAG ou MCP, permitindo respostas contextualizadas sem expor dados externamente.",
   "dimensionCode": "D5",
   "capacityCode": "D5C2"
 }

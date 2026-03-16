@@ -1,6 +1,7 @@
 {
   "code": "Q41",
-  "prompt": "A squad usa essas metricas para priorizar onde expandir, limitar ou ajustar o uso de IA?",
+  "prompt": "A squad mede impacto em qualidade e estabilidade, como defeitos, incidentes, retrabalho ou debt?",
+  "hint": "A squad compara taxa de bugs em producao antes e depois da adocao de IA e monitora se a complexidade do codigo esta sob controle.",
   "dimensionCode": "D7",
-  "capacityCode": "D7C2"
+  "capacityCode": "D7C1"
 }

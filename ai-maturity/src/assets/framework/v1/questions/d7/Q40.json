@@ -1,6 +1,7 @@
 {
   "code": "Q40",
-  "prompt": "A squad compara percepcoes sobre ganho com IA com resultados observaveis, evitando metricas de vaidade?",
+  "prompt": "A squad mede impacto em fluxo de engenharia, como review speed, lead time, throughput ou cycle time?",
+  "hint": "Um dashboard mostra que review time caiu de 48h para 24h apos adocao de bot de code review com IA.",
   "dimensionCode": "D7",
-  "capacityCode": "D7C2"
+  "capacityCode": "D7C1"
 }

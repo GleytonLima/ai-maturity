@@ -1,6 +1,7 @@
 {
   "code": "Q10",
-  "prompt": "A squad possui playbooks, biblioteca de prompts, templates ou padroes reutilizaveis para uso de IA?",
+  "prompt": "A IA esta integrada ao pipeline de CI/CD, automacoes de qualidade ou gates tecnicos?",
+  "hint": "Uma GitHub Action usa IA para classificar falhas de teste ou bloquear merge quando detecta padroes inseguros no codigo gerado.",
   "dimensionCode": "D2",
-  "capacityCode": "D2C2"
+  "capacityCode": "D2C1"
 }
