@@ -343,7 +343,10 @@
                 <ng-container matColumnDef="level">
                   <th mat-header-cell *matHeaderCellDef>Nível</th>
                   <td mat-cell *matCellDef="let item">
-                    {{ item.result.level.level }} - {{ item.result.level.label }}
+                    <span class="level-pill" [style.background]="getLevelColor(item.result.level.level)">
+                      {{ item.result.level.level }}
+                    </span>
+                    {{ item.result.level.label }}
                   </td>
                 </ng-container>
 

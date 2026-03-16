@@ -819,6 +819,7 @@ export class App {
   protected openResultDetail(assessmentId: string): void {
     this.selectedResultAssessmentId.set(assessmentId);
     this.resultViewMode.set('detail');
+    this.activeView.set('results');
   }
 
   protected onResultsSortChange(sort: Sort): void {
