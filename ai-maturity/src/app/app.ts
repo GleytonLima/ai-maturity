@@ -623,6 +623,7 @@ export class App {
         }
       }
     }));
+    this.persistDraftIfReady();
   }
 
   protected updateEvidence(questionCode: string, evidence: string): void {
@@ -661,6 +662,14 @@ export class App {
     const assessment = this.repository.saveAssessment(this.buildAssessmentPayload(team.id, 'draft'));
     this.draft.update((draft) => ({ ...draft, id: assessment.id }));
     this.announce('Rascunho salvo em localStorage.');
+  }
+
+  private persistDraftIfReady(): void {
+    const team = this.draftTeam();
+    if (!team) return;
+
+    const assessment = this.repository.saveAssessment(this.buildAssessmentPayload(team.id, 'draft'));
+    this.draft.update((draft) => ({ ...draft, id: assessment.id }));
   }
 
   protected finalizeAssessment(): void {

@@ -570,6 +570,12 @@
                                   @if ((draft().responses[question.code]?.score ?? -1) >= 3 && !draft().responses[question.code]?.evidence?.trim()) {
                                     <p>Informe pelo menos uma evidencia objetiva.</p>
                                   }
+
+                                  <div class="question-actions">
+                                    <button mat-stroked-button color="primary" type="button" (click)="saveDraft()">
+                                      Salvar rascunho
+                                    </button>
+                                  </div>
                                 </mat-card-content>
                               </mat-card>
                             }
