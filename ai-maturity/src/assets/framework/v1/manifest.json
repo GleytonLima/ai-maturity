@@ -141,6 +141,22 @@
           "4": "A capacidade e amplamente distribuida e evolui continuamente com aprendizagem recorrente e ajustes praticos."
         }
       },
+      "data_driven_decisioning": {
+        "labels": {
+          "0": "Decisoes sem base em dados",
+          "1": "Dados consultados pontualmente",
+          "2": "Dados usados de forma parcial",
+          "3": "Decisoes guiadas por dados de forma recorrente",
+          "4": "Decisoes guiadas por dados com experimentacao continua"
+        },
+        "hints": {
+          "0": "A squad decide expandir ou limitar uso de IA apenas por percepcao, sem confrontar com resultados observaveis.",
+          "1": "A squad olha dados em alguns casos, mas sem ritual, criterio ou continuidade.",
+          "2": "A squad combina dados e percepcoes, mas ainda com inconsistencias e metricas de vaidade.",
+          "3": "A squad usa metricas confiaveis de forma recorrente para comparar ganhos e orientar priorizacao.",
+          "4": "A squad testa hipoteses, usa dados para decidir e retroalimenta continuamente as praticas com experimentos e aprendizado."
+        }
+      },
       "measurement_capability": {
         "labels": {
           "0": "Nao mede",

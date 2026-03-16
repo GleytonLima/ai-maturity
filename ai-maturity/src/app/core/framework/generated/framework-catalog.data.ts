@@ -146,6 +146,22 @@ export const FRAMEWORK_CATALOG: FrameworkCatalog = {
             "4": "A capacidade e amplamente distribuida e evolui continuamente com aprendizagem recorrente e ajustes práticos."
           }
         },
+        "data_driven_decisioning": {
+          "labels": {
+            "0": "Decisoes sem base em dados",
+            "1": "Dados consultados pontualmente",
+            "2": "Dados usados de forma parcial",
+            "3": "Decisoes guiadas por dados de forma recorrente",
+            "4": "Decisoes guiadas por dados com experimentacao continua"
+          },
+          "hints": {
+            "0": "A squad decide expandir ou limitar uso de IA apenas por percepcao, sem confrontar com resultados observaveis.",
+            "1": "A squad olha dados em alguns casos, mas sem ritual, criterio ou continuidade.",
+            "2": "A squad combina dados e percepcoes, mas ainda com inconsistencias e metricas de vaidade.",
+            "3": "A squad usa metricas confiaveis de forma recorrente para comparar ganhos e orientar priorizacao.",
+            "4": "A squad testa hipoteses, usa dados para decidir e retroalimenta continuamente as praticas com experimentos e aprendizado."
+          }
+        },
 
         "measurement_capability": {
           "labels": {
@@ -618,7 +634,8 @@ export const FRAMEWORK_CATALOG: FrameworkCatalog = {
             {
               "code": "Q37",
               "prompt": "A lideranca e o ambiente da squad favorecem experimentacao segura, com clareza e seguranca psicologica?",
-              "hint": "O tech lead encoraja testar novas ferramentas de IA em tarefas de baixo risco, sem penalizar erros; a politica da empresa e clara sobre o que pode e o que nao pode."
+              "hint": "O tech lead encoraja testar novas ferramentas de IA em tarefas de baixo risco, sem penalizar erros; a politica da empresa e clara sobre o que pode e o que nao pode.",
+              "scoreProfile": "people_enablement_maturity"
             },
             {
               "code": "Q38",
@@ -666,13 +683,13 @@ export const FRAMEWORK_CATALOG: FrameworkCatalog = {
               "code": "Q42",
               "prompt": "A squad compara percepcoes sobre ganho com IA com resultados observaveis, evitando metricas de vaidade?",
               "hint": "Embora o time ache que esta mais rapido, a squad verifica com dados se o lead time e a taxa de defeitos realmente melhoraram.",
-              "scoreProfile": "measurement_capability"
+              "scoreProfile": "data_driven_decisioning"
             },
             {
               "code": "Q43",
               "prompt": "A squad usa essas metricas para priorizar onde expandir, limitar ou ajustar o uso de IA?",
               "hint": "Apos ver que IA em testes gerou boa cobertura mas em docs gerou conteudo de baixa qualidade, a squad decidiu investir mais em testes e ajustar o processo de docs.",
-              "scoreProfile": "measurement_capability"
+              "scoreProfile": "data_driven_decisioning"
             },
             {
               "code": "Q44",
