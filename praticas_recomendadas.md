@@ -277,7 +277,7 @@ Este documento consolida práticas recomendadas para apoiar a resposta das 44 qu
 **Pergunta:** A squad controla o impacto da IA em complexidade, manutenibilidade e dívida técnica?
 
 **Práticas recomendadas**
-- Medir complexidade ciclomatica, duplicação, acoplamento, legibilidade e hotspots de manutenção em mudanças assistidas por IA.
+- Medir complexidade ciclomática, duplicação, acoplamento, legibilidade e hotspots de manutenção em mudanças assistidas por IA.
 - Preferir refactors pequenos, com contexto e constraints explícitas, em vez de grandes blocos gerados automaticamente.
 - Registrar débito técnico associado a decisões aceleradas por IA e tratá-lo no backlog.
 
