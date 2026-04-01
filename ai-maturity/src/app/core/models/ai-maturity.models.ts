@@ -99,6 +99,8 @@ export interface Tool {
 
 export interface AssessmentAnswer {
   score: number | null;
+  /** Detalhes opcionais sobre como a prática se aplica na squad (qualquer nota). */
+  practiceDetails: string;
   evidence: string;
   toolIds: string[];
 }
@@ -116,12 +118,117 @@ export interface Assessment {
   responses: Record<string, AssessmentAnswer>;
 }
 
+/** Tipos de uso de IA na hipótese (Seção 4 da Ficha de Capacidade). */
+export type CapabilityCardAiUsageType = 'geracao' | 'analise' | 'automacao' | 'sugestao';
+
+/** Recomendação final (Seção 11). */
+export type CapabilityCardVerdict = 'adotar' | 'testar_mais' | 'descartar';
+
+/** Escala de impacto / confiabilidade (Seção 9). */
+export type CapabilityCardImpactScale = 'baixo' | 'medio' | 'alto';
+export type CapabilityCardReliabilityScale = 'baixa' | 'media' | 'alta';
+
+/** Linha da tabela "Mapeamento do Fluxo" (AS-IS). */
+export interface CapabilityFlowMapRow {
+  /** Ordem do passo na tabela (1, 2, 3…); sempre derivada da posição da linha. */
+  step: number;
+  description: string;
+  responsible: string;
+  duration: string;
+  problem: string;
+}
+
+/** Linha da tabela "Novo Fluxo (TO-BE)". */
+export interface CapabilityToBeFlowRow {
+  /** Ordem do passo na tabela (1, 2, 3…); sempre derivada da posição da linha. */
+  step: number;
+  descriptionWithAi: string;
+  change: string;
+  risk: string;
+}
+
+/** Ficha de Capacidade: operacionalização de uma pergunta com experimento e evidências. */
+export interface CapabilityCard {
+  id: string;
+  assessmentId: string;
+  teamId: string;
+  createdAt: string;
+  updatedAt: string;
+  context: {
+    squad: string;
+    storyAnalyzed: string;
+    dimensionCode: string;
+    questionCode: string;
+  };
+  asIs: {
+    flowDescription: string;
+    stepCount: string;
+    /** Ferramentas selecionadas do cadastro (IDs). */
+    toolIds: string[];
+    /** Texto livre para ferramentas não cadastradas ou notas (migra `toolsUsed` legado). */
+    toolsUsedOther: string;
+    avgTime: string;
+    frequency: string;
+    mainPains: string;
+  };
+  flowMap: CapabilityFlowMapRow[];
+  aiHypothesis: {
+    impactedStages: string;
+    usageTypes: CapabilityCardAiUsageType[];
+    inputNeeded: string;
+    expectedOutput: string;
+  };
+  toBeFlow: CapabilityToBeFlowRow[];
+  risksControls: {
+    hallucinationRisk: string;
+    securityRisk: string;
+    qualityRisk: string;
+    humanValidationNeed: string;
+  };
+  experiment: {
+    executedBy: string;
+    iterations: string;
+    realOrSimulated: string;
+    variationsTested: string;
+  };
+  evidenceQuantitative: {
+    timeBefore: string;
+    timeAfter: string;
+    reductionPercent: string;
+    reworkCount: string;
+    bugs: string;
+  };
+  evidenceQualitative: {
+    teamConfidence: string;
+    easeOfUse: string;
+    outputClarity: string;
+  };
+  impact: CapabilityCardImpactScale | null;
+  reliability: CapabilityCardReliabilityScale | null;
+  /** Justificativa explícita da escala de impacto (âncoras, evidências, limitações). */
+  impactRationale: string;
+  /** Justificativa explícita da escala de confiabilidade (reprodutibilidade, controles). */
+  reliabilityRationale: string;
+  maturityUpdate: {
+    levelBefore: string;
+    levelAfter: string;
+    evidenceJustification: string;
+  };
+  recommendation: {
+    verdict: CapabilityCardVerdict | null;
+    adjustments: string;
+    externalDeps: string;
+  };
+}
+
 export interface PersistedState {
   version: string;
   selectedTeamId: string | null;
   teams: Team[];
   tools: Tool[];
   assessments: Assessment[];
+  /** Fichas de capacidade vinculadas a assessments finalizados (diagnóstico → ação). */
+  capabilityCards?: CapabilityCard[];
 }
 
 export interface CapabilityScore {

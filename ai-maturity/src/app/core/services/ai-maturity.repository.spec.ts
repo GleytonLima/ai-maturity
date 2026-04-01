@@ -128,6 +128,7 @@ describe('AiMaturityRepository', () => {
             responses: {
               Q1: {
                 score: 2,
+                practiceDetails: '',
                 evidence: '',
                 toolIds: ['tool-1']
               }
@@ -143,6 +144,57 @@ describe('AiMaturityRepository', () => {
 
     expect(repository.tools()).toHaveLength(0);
     expect(repository.assessments()[0].responses['Q1'].toolIds).toEqual([]);
+  });
+
+  it('removes capability cards when deleting an assessment', () => {
+    localStorage.setItem(
+      'aimaturity.v1',
+      JSON.stringify({
+        version: 'v2',
+        selectedTeamId: 'team-1',
+        teams: [
+          {
+            id: 'team-1',
+            name: 'Squad A',
+            sector: '',
+            description: '',
+            createdAt: '2026-03-13T00:00:00.000Z',
+            updatedAt: '2026-03-13T00:00:00.000Z'
+          }
+        ],
+        tools: [],
+        assessments: [
+          {
+            id: 'assessment-1',
+            teamId: 'team-1',
+            frameworkVersion: 'v1',
+            assessor: '',
+            summary: '',
+            status: 'finalized',
+            createdAt: '2026-03-13T00:00:00.000Z',
+            updatedAt: '2026-03-13T00:00:00.000Z',
+            finalizedAt: '2026-03-13T00:00:00.000Z',
+            responses: {}
+          }
+        ],
+        capabilityCards: [
+          {
+            id: 'cap-1',
+            assessmentId: 'assessment-1',
+            teamId: 'team-1'
+          }
+        ]
+      })
+    );
+
+    const repository = new AiMaturityRepository();
+
+    expect(repository.capabilityCards()).toHaveLength(1);
+
+    repository.deleteAssessment('assessment-1');
+
+    expect(repository.assessments()).toHaveLength(0);
+    expect(repository.capabilityCards()).toHaveLength(0);
   });
 
   it('imports a backup state and normalizes selected team', () => {

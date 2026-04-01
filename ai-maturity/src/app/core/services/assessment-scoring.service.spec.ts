@@ -22,6 +22,7 @@ function createAssessment(scoreByQuestion: Record<string, number>): Assessment {
           code,
           {
             score: scoreByQuestion[code] ?? 0,
+            practiceDetails: '',
             evidence: scoreByQuestion[code] >= 3 ? 'Evidencia' : '',
             toolIds: []
           }

@@ -1,27 +1,6 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, computed, inject, signal, TemplateRef, ViewChild, ViewChildren } from '@angular/core';
-import type { QueryList } from '@angular/core';
+import { Component, computed, HostListener, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { MatCardModule } from '@angular/material/card';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatExpansionModule, MatExpansionPanel } from '@angular/material/expansion';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatListModule } from '@angular/material/list';
-import { PageEvent, MatPaginatorModule } from '@angular/material/paginator';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatSelectModule } from '@angular/material/select';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatTabChangeEvent, MatTabsModule } from '@angular/material/tabs';
-import { MatTableModule } from '@angular/material/table';
-import { MatIconModule } from '@angular/material/icon';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { MatSortModule, Sort } from '@angular/material/sort';
 
 import { FrameworkCatalogService } from './core/framework/framework-catalog.service';
 import type {
@@ -29,6 +8,10 @@ import type {
   AssessmentAnswer,
   AssessmentResult,
   AssessmentViewModel,
+  CapabilityCard,
+  CapabilityCardAiUsageType,
+  CapabilityFlowMapRow,
+  CapabilityToBeFlowRow,
   FrameworkCatalog,
   FrameworkDimension,
   FrameworkQuestion,
@@ -70,6 +53,11 @@ interface ToolUsageSummary {
   questionCodes: string[];
 }
 
+export interface PaginatorEvent {
+  pageIndex: number;
+  pageSize: number;
+}
+
 function createDraftId(): string {
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
     return `assessment-${crypto.randomUUID()}`;
@@ -78,33 +66,47 @@ function createDraftId(): string {
   return `assessment-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
+/** Mensagem de erro ou null se o valor for vazio ou válido. */
+function validateAsIsStepCount(value: string): string | null {
+  const t = value.trim();
+  if (!t) {
+    return null;
+  }
+  if (!/^\d+$/.test(t)) {
+    return 'Use apenas números inteiros (ex.: 5).';
+  }
+  const n = parseInt(t, 10);
+  if (n < 1) {
+    return 'O número de passos deve ser pelo menos 1.';
+  }
+  if (n > 9999) {
+    return 'Valor muito alto; confira o número de passos.';
+  }
+  return null;
+}
+
+/** Aceita durações com algarismos ou palavras comuns (hora, minuto, dia…). */
+function validateAsIsAvgTime(value: string): string | null {
+  const t = value.trim();
+  if (!t) {
+    return null;
+  }
+  if (/\d/.test(t)) {
+    return null;
+  }
+  if (
+    /hora|horas|minuto|minutos|\bmin\b|dia|dias|semana|semanas|mês|meses|segundo|segundos/i.test(
+      t
+    )
+  ) {
+    return null;
+  }
+  return 'Indique uma duração com números ou palavras como hora, minuto ou dia (ex.: 45 min, 2 h, 1 dia útil).';
+}
+
 @Component({
   selector: 'app-root',
-  imports: [
-    CommonModule,
-    FormsModule,
-    DatePipe,
-    MatToolbarModule,
-    MatButtonModule,
-    MatButtonToggleModule,
-    MatCardModule,
-    MatChipsModule,
-    MatDividerModule,
-    MatExpansionModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatListModule,
-    MatPaginatorModule,
-    MatProgressBarModule,
-    MatSelectModule,
-    MatSnackBarModule,
-    MatTabsModule,
-    MatTableModule,
-    MatIconModule,
-    MatTooltipModule,
-    MatDialogModule,
-    MatSortModule
-  ],
+  imports: [CommonModule, FormsModule, DatePipe],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
@@ -113,14 +115,13 @@ export class App {
   private readonly repository = inject(AiMaturityRepository);
   private readonly scoringService = inject(AssessmentScoringService);
   private readonly exportService = inject(ExportService);
-  private readonly snackBar = inject(MatSnackBar);
-  private readonly dialog = inject(MatDialog);
 
-  @ViewChildren(MatExpansionPanel) private dimensionPanels!: QueryList<MatExpansionPanel>;
-  @ViewChild('levelsHelpRef') private levelsHelpRef!: TemplateRef<unknown>;
+  private toastTimer: ReturnType<typeof setTimeout> | null = null;
 
   protected readonly catalog = signal<FrameworkCatalog>(this.catalogService.getCatalog());
-  protected readonly activeView = signal<'teams' | 'tools' | 'assessment' | 'results'>('teams');
+  protected readonly activeView = signal<
+    'teams' | 'tools' | 'assessment' | 'results' | 'capability-cards'
+  >('teams');
   protected readonly teams = this.repository.teams;
   protected readonly tools = this.repository.tools;
   protected readonly selectedTeamId = this.repository.selectedTeamId;
@@ -139,7 +140,128 @@ export class App {
   protected readonly editingTeamId = signal<string | null>(null);
   protected readonly editingToolId = signal<string | null>(null);
   protected readonly draft = signal<AssessmentDraftState>(this.createEmptyDraft());
-  protected readonly feedback = signal<string>('Selecione um time para iniciar.');
+  protected readonly feedback = signal<string>('');
+  /** Painel de ajuda dos níveis (substitui MatDialog). */
+  protected readonly levelsHelpOpen = signal(false);
+  /** Dimensões expandidas no formulário de perguntas (substitui MatAccordion). */
+  protected readonly expandedDimensionCodes = signal<Set<string>>(new Set());
+  /** Seções expandidas no formulário de ficha de capacidade. */
+  protected readonly expandedCapabilitySections = signal<Set<string>>(
+    new Set(['cap-ctx', 'cap-asis', 'cap-flow'])
+  );
+
+  /** Textos do botão (?) na seção AS-IS da ficha de capacidade. */
+  protected readonly asIsFieldHints = {
+    flowDescription:
+      'Objetivo: descrever o fluxo real hoje, de ponta a ponta (quem faz o quê e em que ordem). Ex.: "O analista recebe o pedido por e-mail, abre a planilha de controle, copia os dados manualmente para o Jira e envia o PDF ao cliente."',
+    stepCount:
+      'Objetivo: quantificar quantos passos distintos existem no processo (macro ou detalhado — mantenha o mesmo critério no restante da ficha). Ex.: 4 ou 12.',
+    avgTime:
+      'Objetivo: tempo médio para concluir a etapa ou o fluxo que você está descrevendo. Ex.: "45 min", "2 h", "1 dia útil", "cerca de 3 dias".',
+    toolsUsed:
+      'Marque as ferramentas do cadastro da aplicação usadas neste AS-IS. Use "Outras" só para itens ainda não cadastrados ou observações curtas. Ideal: manter o catálogo atualizado e preferir seleção a texto livre.',
+    frequency:
+      'Objetivo: deixar claro com que ritmo o trabalho se repete. Ex.: "diário", "120 vezes por mês", "a cada sprint", "sob demanda".',
+    mainPains:
+      'Objetivo: registrar gargalos, retrabalho, riscos ou frustrações relatadas pelo time. Ex.: "erros ao copiar dados entre sistemas", "falta de padrão entre squads", "demora na aprovação".'
+  } as const;
+
+  /** Dicas (?) e definições da ficha de capacidade (fora da seção AS-IS). */
+  protected readonly capCardHints = {
+    ctxSquad:
+      'Squad ou célula à qual o caso real se refere. Pode coincidir com o time cadastrado no app ou detalhar subárea. Ex.: "Squad Pagamentos B2B".',
+    ctxDimension:
+      'Código da dimensão do framework (ex.: D1, D3) vinculado à pergunta. Delimita o constructo teórico em que a evidência será interpretada.',
+    ctxStory:
+      'Identificador rastreável do caso: épico, issue, ID de backlog ou descrição sucinta auditável. Ex.: "OPS-4412 — Conciliação manual de NF-e".',
+    ctxQuestionCode:
+      'Código canônico da pergunta (ex.: D2-C01-Q03). Ancora esta ficha ao diagnóstico; o enunciado completo é exibido abaixo.',
+    flowSection:
+      'Cada linha é um passo do AS-IS, coerente com a seção 2. Mantenha a ordem operacional. Use as colunas para deixar explícitos papel, duração e falha do passo.',
+    flowDesc:
+      'O que acontece neste passo: ação, decisão ou handoff. Redija de modo que um revisor externo reconstrua o fluxo sem ambiguidade.',
+    flowResp:
+      'Papel humano (cargo/squad), sistema ou fila responsável pela execução. Ex.: "Analista fiscal", "ServiceNow", "Fila N2".',
+    flowTime:
+      'Duração típica ou espera deste passo (mesma convenção da seção 2). Ex.: "15 min", "2 h de fila", "1 dia útil".',
+    flowProblem:
+      'Falha, atrito ou risco observado neste passo: retrabalho, erro manual, SLA perdido, dependência frágil. Ex.: "Reenvio de planilha em 30% dos casos".',
+    tobeSection:
+      'Fluxo alvo com IA. Para cada passo, descreva o comportamento futuro, o delta em relação ao AS-IS e o risco residual.',
+    tobeDesc:
+      'Passo no estado futuro: entrada da IA, supervisão humana, saída esperada e critérios de sucesso observáveis.',
+    tobeChange:
+      'Delta explícito versus AS-IS: o que deixa de ser manual, que SLAs mudam, que custo/qualidade se altera.',
+    tobeRisk:
+      'Risco do passo TO-BE: alucinação, privacidade, conformidade, lock-in de fornecedor, drift, necessidade de retreino.',
+    aiStages:
+      'Referência aos passos numerados do AS-IS/TO-BE ou subetapas atingidas. Ex.: "Passos 2–4" ou "após validação fiscal".',
+    aiTypes:
+      'Classificação do modo de uso: Geração, Análise, Automação, Sugestão. Selecione todas as modalidades que se aplicam à hipótese (toque ou clique para marcar/desmarcar).',
+    aiInput:
+      'Dados, permissões, contexto e formatos mínimos para operação segura. Ex.: "Pedido em JSON + política de frete v4 + sem PII de terceiros".',
+    aiOutput:
+      'Artefato ou decisão esperada, verificável. Ex.: "Rascunho de resposta + etiquetas de risco + justificativa em 3 bullets".',
+    riskHallu:
+      'Cenários de conteúdo incorreto ou inventado; severidade; detecção (amostragem, golden set, revisão por especialista).',
+    riskSec:
+      'Dados sensíveis, fluxo de dados, retenção, LGPD/GDPR, injeção de prompt, dependência de APIs de terceiros.',
+    riskQual:
+      'Risco a precisão, consistência com políticas internas, tom regulatório, fairness quando aplicável.',
+    riskHuman:
+      'Pontos de checagem obrigatórios, papéis aprovadores, SLAs de revisão, playbooks quando o modelo falha.',
+    expBy:
+      'Quem conduziu o experimento (nomes e papéis), para rastreabilidade e revisão metodológica. Evite campos genéricos sem identificação.',
+    expIter:
+      'Quantidade de ciclos relevantes: execuções, lotes, sprints ou sessões. Distingue piloto único de campanha repetida.',
+    expCtx:
+      'Se usou dados reais (anonimizados), réplica, sandbox ou simulação; limitações de fidelidade e viés de contexto.',
+    expVar:
+      'Variações de prompt, modelo, temperatura, ferramenta ou política; critério para escolher a variante reportada nas evidências.',
+    evQTimeBefore:
+      'Medida de tempo ou esforço pré-intervenção; use a mesma unidade que em "Tempo depois" (ex.: minutos por caso, horas-homem por lote).',
+    evQTimeAfter:
+      'Medida correspondente pós-intervenção, com protocolo de medição alinhado ao "antes" sempre que possível.',
+    evQRed:
+      'Ganho ou redução percentual; indique base (média, mediana) e tamanho amostral ou período.',
+    evQRw:
+      'Retrabalho, retrys ou reprovações antes/depois, em contagem ou taxa, se aplicável ao caso.',
+    evQBugs:
+      'Defeitos de software, regressões, incidentes de pipeline ou falhas de integração observadas no período.',
+    evLConf:
+      'Síntese da confiança percebida pelo time (entrevista curta, escala informal). Complementa métricas, não as substitui.',
+    evLEase:
+      'Atrito de uso, curva de aprendizado, necessidade de suporte ou documentação adicional.',
+    evLClar:
+      'Se o output foi compreensível, acionável e aderente ao especificado na hipótese (seção 4).',
+    impactDefinitionShort:
+      'Magnitude e relevância do efeito sobre processo ou resultado de negócio, dado o objetivo da hipótese e as evidências das seções 7–8.',
+    reliabilityDefinitionShort:
+      'Estabilidade do efeito e do comportamento do sistema entre execuções e condições declaradas; qualidade metodológica da evidência e reprodutibilidade.',
+    impactGuidance:
+      'Discrimine impacto (quanto mudou e para quem) de confiabilidade (com que solidez metodológica essa mudança é defensável). Escalas altas exigem justificativa explícita nos campos de texto.',
+    impactLevel:
+      'Rubrica — Baixo: efeito marginal ou muito localizado; pequenos ganhos em tempo/custo/qualidade; generalização limitada ao recorte testado. Médio: efeito claro em parte relevante do fluxo ou métrica; evidência convergente com limitações de amostra, duração ou contexto. Alto: efeito substancial em resultado operacional ou de negócio, plausivelmente atribuível à intervenção; evidência forte com limitações explicitadas.',
+    reliabilityLevel:
+      'Rubrica — Baixa: alta variância entre tentativas; condições frágeis; dados esparsos ou fortemente dependentes de ajuste manual. Média: desempenho estável nas condições testadas; validação humana e mitigações documentadas; falhas residuais conhecidas. Alta: reprodutibilidade entre sessões ou equipes análogas; monitoração ou critérios de aceite; limites de uso explícitos.',
+    impactRationaleField:
+      'Cite evidências (seções 7–8), baseline/comparador, pressupostos, ameaças à validade interna e externa e por que o nível escolhido é o mais conservador defensável.',
+    reliabilityRationaleField:
+      'Explique variância observada, reprodutibilidade, controles (revisão humana, A/B, monitoração) e aderência entre protocolo de teste e uso pretendido.',
+    matBefore:
+      'Nível de maturidade em IA (N0–N4) antes da intervenção, coerente com o assessment vinculado a esta ficha.',
+    matAfter:
+      'Nível após a intervenção. Eleve apenas se as evidências documentadas sustentarem a mudança de forma auditável.',
+    matJustify:
+      'Ligação explícita entre artefatos do experimento, métricas e decisões registradas nas seções anteriores.',
+    recVerdict:
+      'Adotar: caminho para produção com governo. Testar mais: sinal positivo, porém lacunas metodológicas ou de risco. Descartar: benefício insuficiente frente a custo/risco ou evidência negativa consistente.',
+    recAdj:
+      'Pré-requisitos para escala: dados, mudança de processo, engenharia, treinamento, políticas ou orçamento.',
+    recDeps:
+      'APIs, fornecedores, jurídico, segurança, infraestrutura, licenças ou squads externas necessárias ao próximo passo.'
+  } as const;
+
   protected readonly tabIndex = computed(() => this.viewToIndex(this.activeView()));
   protected readonly teamCrudMode = signal<'list' | 'form'>('list');
   protected readonly toolCrudMode = signal<'list' | 'form'>('list');
@@ -158,44 +280,6 @@ export class App {
   protected readonly teamPageSize = signal(5);
   protected readonly toolPageIndex = signal(0);
   protected readonly toolPageSize = signal(20);
-  protected readonly displayedTeamColumns = [
-    'name',
-    'sector',
-    'assessments',
-    'updatedAt',
-    'actions'
-  ];
-  protected readonly displayedToolColumns = [
-    'name',
-    'category',
-    'status',
-    'usage',
-    'updatedAt',
-    'actions'
-  ];
-  protected readonly displayedAssessmentColumns = [
-    'team',
-    'status',
-    'updatedAt',
-    'level',
-    'score',
-    'actions'
-  ];
-  protected readonly displayedResultColumns = [
-    'team',
-    'finalizedAt',
-    'level',
-    'score',
-    'actions'
-  ];
-  protected readonly resultDetailQuestionColumns = [
-    'dimension',
-    'code',
-    'prompt',
-    'score',
-    'evidence',
-    'tools'
-  ];
 
   protected readonly selectedTeam = computed(
     () =>
@@ -204,6 +288,16 @@ export class App {
   protected readonly draftTeam = computed(
     () => this.teams().find((team) => team.id === this.draft().teamId) ?? null
   );
+  protected readonly teamPageCount = computed(() => {
+    const n = this.teams().length;
+    if (n === 0) return 1;
+    return Math.ceil(n / this.teamPageSize());
+  });
+  protected readonly toolPageCount = computed(() => {
+    const n = this.tools().length;
+    if (n === 0) return 1;
+    return Math.ceil(n / this.toolPageSize());
+  });
   protected readonly assessmentsForSelectedTeam = computed(() => {
     const teamId = this.selectedTeamId();
     return teamId ? this.repository.getAssessmentsForTeam(teamId) : [];
@@ -320,12 +414,19 @@ export class App {
       if (dimensionCode && dimension.code !== dimensionCode) continue;
       for (const capacity of dimension.capacities) {
         for (const question of capacity.questions) {
-          if (search && !question.code.toLowerCase().includes(search) && !question.prompt.toLowerCase().includes(search)) {
+          const response = detail.assessment.responses[question.code];
+          const inPractice = response?.practiceDetails?.toLowerCase().includes(search) ?? false;
+          if (
+            search &&
+            !question.code.toLowerCase().includes(search) &&
+            !question.prompt.toLowerCase().includes(search) &&
+            !inPractice
+          ) {
             continue;
           }
           rows.push({
             question,
-            response: detail.assessment.responses[question.code],
+            response,
             dimensionCode: dimension.code,
             dimensionTitle: dimension.title
           });
@@ -338,6 +439,12 @@ export class App {
     active: 'dimension' | 'code' | 'prompt' | 'score';
     direction: 'asc' | 'desc';
   }>({ active: 'code', direction: 'asc' });
+  protected readonly capabilityCardViewMode = signal<'list' | 'form'>('list');
+  protected readonly capabilityCardDraft = signal<CapabilityCard | null>(null);
+  protected readonly capabilityCardFilterTeamId = signal<string>('');
+  /** Novo: assessment (finalizado) e pergunta escolhidos antes de abrir o formulário. */
+  protected readonly capNewAssessmentId = signal<string>('');
+  protected readonly capNewQuestionCode = signal<string>('');
   protected readonly sortedResultDetailQuestionRows = computed(() => {
     const rows = [...this.resultDetailQuestionRows()];
     const sort = this.questionRowsSort();
@@ -408,6 +515,25 @@ export class App {
   protected readonly portfolioToolSummary = computed(() =>
     this.buildToolUsageSummary(this.finalizedAssessments().map(({ assessment }) => assessment))
   );
+  protected readonly finalizedAssessmentOptions = computed(() =>
+    this.assessmentViewModels().filter(({ assessment }) => assessment.status === 'finalized')
+  );
+  protected readonly capabilityCardsList = computed(() => {
+    const teamFilter = this.capabilityCardFilterTeamId();
+    return this.repository
+      .capabilityCards()
+      .filter((c) => !teamFilter || c.teamId === teamFilter)
+      .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+  });
+  protected readonly capabilityCardAiUsageOptions: Array<{
+    value: CapabilityCardAiUsageType;
+    label: string;
+  }> = [
+    { value: 'geracao', label: 'Geração' },
+    { value: 'analise', label: 'Análise' },
+    { value: 'automacao', label: 'Automação' },
+    { value: 'sugestao', label: 'Sugestão' }
+  ];
   protected readonly portfolioToolSummaryByDimension = computed(() =>
     this.catalog().dimensions
       .map((dimension) => ({
@@ -437,12 +563,14 @@ export class App {
     this.resetDraftFromSelection();
   }
 
-  protected setActiveView(view: 'teams' | 'tools' | 'assessment' | 'results'): void {
+  protected setActiveView(
+    view: 'teams' | 'tools' | 'assessment' | 'results' | 'capability-cards'
+  ): void {
     this.activeView.set(view);
   }
 
-  protected onTabChange(event: MatTabChangeEvent): void {
-    const view = this.indexToView(event.index);
+  protected selectTab(index: number): void {
+    const view = this.indexToView(index);
     this.activeView.set(view);
 
     if (view === 'tools') {
@@ -457,6 +585,64 @@ export class App {
       this.resultViewMode.set('list');
       this.selectedResultAssessmentId.set(null);
     }
+
+    if (view === 'capability-cards') {
+      this.capabilityCardViewMode.set('list');
+      this.capabilityCardDraft.set(null);
+    }
+  }
+
+  @HostListener('document:keydown.escape')
+  protected onEscapeCloseHelp(): void {
+    if (this.levelsHelpOpen()) {
+      this.closeLevelsHelp();
+    }
+  }
+
+  protected closeLevelsHelp(): void {
+    this.levelsHelpOpen.set(false);
+  }
+
+  protected onLevelsHelpBackdrop(event: MouseEvent): void {
+    if (event.target === event.currentTarget) {
+      this.closeLevelsHelp();
+    }
+  }
+
+  protected isDimensionExpanded(code: string): boolean {
+    return this.expandedDimensionCodes().has(code);
+  }
+
+  protected toggleDimensionPanel(code: string): void {
+    this.expandedDimensionCodes.update((set) => {
+      const next = new Set(set);
+      if (next.has(code)) {
+        next.delete(code);
+      } else {
+        next.add(code);
+      }
+      return next;
+    });
+  }
+
+  protected isCapabilitySectionExpanded(id: string): boolean {
+    return this.expandedCapabilitySections().has(id);
+  }
+
+  protected toggleCapabilitySection(id: string): void {
+    this.expandedCapabilitySections.update((set) => {
+      const next = new Set(set);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  }
+
+  private resetCapabilityAccordion(): void {
+    this.expandedCapabilitySections.set(new Set(['cap-ctx', 'cap-asis', 'cap-flow']));
   }
 
   protected startNewTeam(): void {
@@ -664,14 +850,42 @@ export class App {
     this.teamForm.set({ name: '', sector: '', description: '' });
   }
 
-  protected onTeamPageChange(event: PageEvent): void {
+  protected onTeamPageChange(event: PaginatorEvent): void {
     this.teamPageIndex.set(event.pageIndex);
     this.teamPageSize.set(event.pageSize);
   }
 
-  protected onToolPageChange(event: PageEvent): void {
+  protected teamPageGoPrev(): void {
+    this.teamPageIndex.update((i) => Math.max(0, i - 1));
+  }
+
+  protected teamPageGoNext(): void {
+    const max = Math.max(0, this.teamPageCount() - 1);
+    this.teamPageIndex.update((i) => Math.min(max, i + 1));
+  }
+
+  protected setTeamPageSize(size: number): void {
+    this.teamPageSize.set(size);
+    this.teamPageIndex.set(0);
+  }
+
+  protected onToolPageChange(event: PaginatorEvent): void {
     this.toolPageIndex.set(event.pageIndex);
     this.toolPageSize.set(event.pageSize);
+  }
+
+  protected toolPageGoPrev(): void {
+    this.toolPageIndex.update((i) => Math.max(0, i - 1));
+  }
+
+  protected toolPageGoNext(): void {
+    const max = Math.max(0, this.toolPageCount() - 1);
+    this.toolPageIndex.update((i) => Math.min(max, i + 1));
+  }
+
+  protected setToolPageSize(size: number): void {
+    this.toolPageSize.set(size);
+    this.toolPageIndex.set(0);
   }
 
   protected getAssessmentCountForTeam(teamId: string): number {
@@ -704,18 +918,21 @@ export class App {
   }
 
   protected toggleAllDimensions(): void {
-    const panels = this.dimensionPanels?.toArray() ?? [];
-    const allExpanded = panels.length > 0 && panels.every((p) => p.expanded);
+    const codes = this.catalog().dimensions.map((d) => d.code);
+    const current = this.expandedDimensionCodes();
+    const allExpanded =
+      codes.length > 0 && codes.every((c) => current.has(c));
     if (allExpanded) {
-      panels.forEach((p) => p.close());
+      this.expandedDimensionCodes.set(new Set());
     } else {
-      panels.forEach((p) => p.open());
+      this.expandedDimensionCodes.set(new Set(codes));
     }
   }
 
   protected get allDimensionsExpanded(): boolean {
-    const panels = this.dimensionPanels?.toArray() ?? [];
-    return panels.length > 0 && panels.every((p) => p.expanded);
+    const codes = this.catalog().dimensions.map((d) => d.code);
+    const current = this.expandedDimensionCodes();
+    return codes.length > 0 && codes.every((c) => current.has(c));
   }
 
   protected getCompletionBadgeStyle(percent: number): Record<string, string> {
@@ -825,6 +1042,20 @@ export class App {
     }));
   }
 
+  protected updatePracticeDetails(questionCode: string, practiceDetails: string): void {
+    this.draft.update((draft) => ({
+      ...draft,
+      responses: {
+        ...draft.responses,
+        [questionCode]: {
+          ...draft.responses[questionCode],
+          practiceDetails
+        }
+      }
+    }));
+    this.persistDraftIfReady();
+  }
+
   protected updateQuestionTools(questionCode: string, toolIds: string[]): void {
     this.draft.update((draft) => ({
       ...draft,
@@ -903,16 +1134,50 @@ export class App {
     this.activeView.set('results');
   }
 
-  protected onResultsSortChange(sort: Sort): void {
-    const active = (sort.active || 'finalizedAt') as 'finalizedAt' | 'level' | 'score';
-    const direction = (sort.direction || 'desc') as 'asc' | 'desc';
-    this.resultsSort.set({ active, direction });
+  protected toggleResultsSort(column: 'finalizedAt' | 'level' | 'score'): void {
+    this.resultsSort.update((cur) => {
+      if (cur.active === column) {
+        return {
+          active: column,
+          direction: cur.direction === 'asc' ? 'desc' : 'asc'
+        };
+      }
+      return {
+        active: column,
+        direction: column === 'finalizedAt' ? 'desc' : 'asc'
+      };
+    });
   }
 
-  protected onQuestionRowsSortChange(sort: Sort): void {
-    const active = (sort.active || 'code') as 'dimension' | 'code' | 'prompt' | 'score';
-    const direction = (sort.direction || 'asc') as 'asc' | 'desc';
-    this.questionRowsSort.set({ active, direction });
+  protected resultsSortArrow(column: 'finalizedAt' | 'level' | 'score'): string {
+    const s = this.resultsSort();
+    if (s.active !== column) {
+      return '';
+    }
+    return s.direction === 'asc' ? '↑' : '↓';
+  }
+
+  protected toggleQuestionRowsSort(column: 'dimension' | 'code' | 'prompt' | 'score'): void {
+    this.questionRowsSort.update((cur) => {
+      if (cur.active === column) {
+        return {
+          active: column,
+          direction: cur.direction === 'asc' ? 'desc' : 'asc'
+        };
+      }
+      return {
+        active: column,
+        direction: 'asc'
+      };
+    });
+  }
+
+  protected questionRowsSortArrow(column: 'dimension' | 'code' | 'prompt' | 'score'): string {
+    const s = this.questionRowsSort();
+    if (s.active !== column) {
+      return '';
+    }
+    return s.direction === 'asc' ? '↑' : '↓';
   }
 
   private parseQuestionCodeNumber(code: string): number | null {
@@ -940,11 +1205,7 @@ export class App {
   }
 
   protected openLevelsHelp(): void {
-    this.dialog.open(this.levelsHelpRef, {
-      width: '640px',
-      maxHeight: '85vh',
-      autoFocus: false
-    });
+    this.levelsHelpOpen.set(true);
   }
 
   protected getLevelColor(level: string): string {
@@ -956,6 +1217,379 @@ export class App {
       N5: '#26a69a'
     };
     return colors[level] ?? '#9e9e9e';
+  }
+
+  // ── Fichas de capacidade (diagnóstico → experimento → evidência) ──
+
+  protected setCapabilityCardFilterTeamId(teamId: string): void {
+    this.capabilityCardFilterTeamId.set(teamId);
+  }
+
+  protected setCapNewAssessmentId(id: string): void {
+    this.capNewAssessmentId.set(id ?? '');
+  }
+
+  protected setCapNewQuestionCode(code: string): void {
+    this.capNewQuestionCode.set(code ?? '');
+  }
+
+  protected getAllQuestionsFlat(): FrameworkQuestion[] {
+    return this.getAllQuestions(this.catalog());
+  }
+
+  protected startCapabilityCardCreate(): void {
+    const assessmentId = this.capNewAssessmentId().trim();
+    const questionCode = this.capNewQuestionCode().trim();
+    if (!assessmentId || !questionCode) {
+      this.announce('Selecione um assessment finalizado e uma pergunta (capacidade) para a ficha.');
+      return;
+    }
+
+    const assessment = this.repository.assessments().find((a) => a.id === assessmentId);
+    if (!assessment || assessment.status !== 'finalized') {
+      this.announce('Use apenas assessments finalizados como base do diagnóstico.');
+      return;
+    }
+
+    const team = this.teams().find((t) => t.id === assessment.teamId);
+    const dimensionCode = this.findDimensionCodeForQuestion(questionCode);
+    const card = this.repository.createCapabilityCardSkeleton({
+      assessmentId,
+      teamId: assessment.teamId,
+      squad: team?.name ?? '',
+      dimensionCode,
+      questionCode
+    });
+    this.capabilityCardDraft.set(card);
+    this.capabilityCardViewMode.set('form');
+    this.resetCapabilityAccordion();
+  }
+
+  protected editCapabilityCard(card: CapabilityCard): void {
+    this.capabilityCardDraft.set({
+      ...card,
+      impactRationale: card.impactRationale ?? '',
+      reliabilityRationale: card.reliabilityRationale ?? '',
+      flowMap: card.flowMap.map((r, i) => ({ ...r, step: i + 1 })),
+      toBeFlow: card.toBeFlow.map((r, i) => ({ ...r, step: i + 1 })),
+      aiHypothesis: {
+        ...card.aiHypothesis,
+        usageTypes: [...card.aiHypothesis.usageTypes]
+      }
+    });
+    this.capabilityCardViewMode.set('form');
+    this.resetCapabilityAccordion();
+  }
+
+  protected cancelCapabilityCardForm(): void {
+    this.capabilityCardDraft.set(null);
+    this.capabilityCardViewMode.set('list');
+  }
+
+  protected saveCapabilityCardDraft(): void {
+    const draft = this.capabilityCardDraft();
+    if (!draft) {
+      return;
+    }
+
+    const stepErr = validateAsIsStepCount(draft.asIs.stepCount);
+    const timeErr = validateAsIsAvgTime(draft.asIs.avgTime);
+    if (stepErr || timeErr) {
+      this.expandedCapabilitySections.update((set) => {
+        const next = new Set(set);
+        next.add('cap-asis');
+        return next;
+      });
+      const parts = [stepErr, timeErr].filter(Boolean) as string[];
+      this.announce(`Corrija a seção Estado atual (AS-IS): ${parts.join(' ')}`);
+      return;
+    }
+
+    const saved = this.repository.saveCapabilityCard(draft);
+    this.capabilityCardDraft.set(null);
+    this.capabilityCardViewMode.set('list');
+    this.capNewAssessmentId.set('');
+    this.capNewQuestionCode.set('');
+    this.announce(`Ficha ${saved.context.questionCode} salva.`);
+  }
+
+  protected deleteCapabilityCardRow(cardId: string): void {
+    this.repository.deleteCapabilityCard(cardId);
+    if (this.capabilityCardDraft()?.id === cardId) {
+      this.cancelCapabilityCardForm();
+    }
+    this.announce('Ficha removida.');
+  }
+
+  protected exportCurrentCapabilityCardMarkdown(): void {
+    const draft = this.capabilityCardDraft();
+    if (!draft) {
+      return;
+    }
+
+    const prompt = this.getQuestionPrompt(draft.context.questionCode);
+    const md = this.exportService.buildCapabilityCardMarkdown(draft, prompt, this.tools());
+    const safe = draft.context.questionCode.replace(/[^a-zA-Z0-9_-]+/g, '_');
+    this.exportService.downloadFile(`ficha-capacidade-${safe}.md`, md, 'text/markdown;charset=utf-8');
+    this.announce('Markdown da ficha baixado.');
+  }
+
+  protected patchCapabilityCard(mapper: (card: CapabilityCard) => CapabilityCard): void {
+    this.capabilityCardDraft.update((d) => (d ? mapper(d) : d));
+  }
+
+  protected updateCardContext<K extends keyof CapabilityCard['context']>(
+    key: K,
+    value: CapabilityCard['context'][K]
+  ): void {
+    this.patchCapabilityCard((c) => ({
+      ...c,
+      context: { ...c.context, [key]: value }
+    }));
+  }
+
+  protected updateCardAsIs<K extends keyof CapabilityCard['asIs']>(
+    key: K,
+    value: CapabilityCard['asIs'][K]
+  ): void {
+    this.patchCapabilityCard((c) => ({
+      ...c,
+      asIs: { ...c.asIs, [key]: value }
+    }));
+  }
+
+  protected getAsIsStepCountError(): string | null {
+    const card = this.capabilityCardDraft();
+    return card ? validateAsIsStepCount(card.asIs.stepCount) : null;
+  }
+
+  protected getAsIsAvgTimeError(): string | null {
+    const card = this.capabilityCardDraft();
+    return card ? validateAsIsAvgTime(card.asIs.avgTime) : null;
+  }
+
+  protected updateAiHypothesis<K extends keyof CapabilityCard['aiHypothesis']>(
+    key: K,
+    value: CapabilityCard['aiHypothesis'][K]
+  ): void {
+    this.patchCapabilityCard((c) => ({
+      ...c,
+      aiHypothesis: { ...c.aiHypothesis, [key]: value }
+    }));
+  }
+
+  protected toggleAsIsToolId(toolId: string, selected: boolean): void {
+    this.patchCapabilityCard((c) => {
+      const next = new Set(c.asIs.toolIds);
+      if (selected) {
+        next.add(toolId);
+      } else {
+        next.delete(toolId);
+      }
+      return { ...c, asIs: { ...c.asIs, toolIds: [...next] } };
+    });
+  }
+
+  protected toggleAiUsageType(usage: CapabilityCardAiUsageType): void {
+    this.patchCapabilityCard((c) => {
+      const usageTypes = [...c.aiHypothesis.usageTypes];
+      const idx = usageTypes.indexOf(usage);
+      if (idx >= 0) {
+        usageTypes.splice(idx, 1);
+      } else {
+        usageTypes.push(usage);
+      }
+      return { ...c, aiHypothesis: { ...c.aiHypothesis, usageTypes } };
+    });
+  }
+
+  protected updateRisks<K extends keyof CapabilityCard['risksControls']>(
+    key: K,
+    value: CapabilityCard['risksControls'][K]
+  ): void {
+    this.patchCapabilityCard((c) => ({
+      ...c,
+      risksControls: { ...c.risksControls, [key]: value }
+    }));
+  }
+
+  protected updateExperiment<K extends keyof CapabilityCard['experiment']>(
+    key: K,
+    value: CapabilityCard['experiment'][K]
+  ): void {
+    this.patchCapabilityCard((c) => ({
+      ...c,
+      experiment: { ...c.experiment, [key]: value }
+    }));
+  }
+
+  protected updateEvidenceQuant<K extends keyof CapabilityCard['evidenceQuantitative']>(
+    key: K,
+    value: CapabilityCard['evidenceQuantitative'][K]
+  ): void {
+    this.patchCapabilityCard((c) => ({
+      ...c,
+      evidenceQuantitative: { ...c.evidenceQuantitative, [key]: value }
+    }));
+  }
+
+  protected updateEvidenceQual<K extends keyof CapabilityCard['evidenceQualitative']>(
+    key: K,
+    value: CapabilityCard['evidenceQualitative'][K]
+  ): void {
+    this.patchCapabilityCard((c) => ({
+      ...c,
+      evidenceQualitative: { ...c.evidenceQualitative, [key]: value }
+    }));
+  }
+
+  protected updateMaturity<K extends keyof CapabilityCard['maturityUpdate']>(
+    key: K,
+    value: CapabilityCard['maturityUpdate'][K]
+  ): void {
+    this.patchCapabilityCard((c) => ({
+      ...c,
+      maturityUpdate: { ...c.maturityUpdate, [key]: value }
+    }));
+  }
+
+  protected updateRecommendation<K extends keyof CapabilityCard['recommendation']>(
+    key: K,
+    value: CapabilityCard['recommendation'][K]
+  ): void {
+    this.patchCapabilityCard((c) => ({
+      ...c,
+      recommendation: { ...c.recommendation, [key]: value }
+    }));
+  }
+
+  protected setImpactLevel(value: CapabilityCard['impact']): void {
+    this.patchCapabilityCard((c) => ({ ...c, impact: value }));
+  }
+
+  protected setReliabilityLevel(value: CapabilityCard['reliability']): void {
+    this.patchCapabilityCard((c) => ({ ...c, reliability: value }));
+  }
+
+  protected updateImpactRationale(value: string): void {
+    this.patchCapabilityCard((c) => ({ ...c, impactRationale: value }));
+  }
+
+  protected updateReliabilityRationale(value: string): void {
+    this.patchCapabilityCard((c) => ({ ...c, reliabilityRationale: value }));
+  }
+
+  protected setImpactLevelFromSelect(value: string): void {
+    this.setImpactLevel(
+      value === '' ? null : (value as NonNullable<CapabilityCard['impact']>)
+    );
+  }
+
+  protected setReliabilityLevelFromSelect(value: string): void {
+    this.setReliabilityLevel(
+      value === '' ? null : (value as NonNullable<CapabilityCard['reliability']>)
+    );
+  }
+
+  protected setVerdictFromSelect(value: string): void {
+    this.updateRecommendation(
+      'verdict',
+      value === '' ? null : (value as NonNullable<CapabilityCard['recommendation']['verdict']>)
+    );
+  }
+
+  protected updateFlowMapRow(index: number, patch: Partial<CapabilityFlowMapRow>): void {
+    this.patchCapabilityCard((c) => {
+      const flowMap = c.flowMap.map((row, i) =>
+        i === index ? { ...row, ...patch, step: i + 1 } : { ...row, step: i + 1 }
+      );
+      return { ...c, flowMap };
+    });
+  }
+
+  protected addFlowMapRow(): void {
+    this.patchCapabilityCard((c) => {
+      const step = c.flowMap.length + 1;
+      return {
+        ...c,
+        flowMap: [
+          ...c.flowMap,
+          { step, description: '', responsible: '', duration: '', problem: '' }
+        ]
+      };
+    });
+  }
+
+  protected removeFlowMapRow(index: number): void {
+    this.patchCapabilityCard((c) => {
+      const flowMap = c.flowMap.filter((_, i) => i !== index).map((row, i) => ({
+        ...row,
+        step: i + 1
+      }));
+      return {
+        ...c,
+        flowMap:
+          flowMap.length > 0
+            ? flowMap
+            : [{ step: 1, description: '', responsible: '', duration: '', problem: '' }]
+      };
+    });
+  }
+
+  protected updateToBeRow(index: number, patch: Partial<CapabilityToBeFlowRow>): void {
+    this.patchCapabilityCard((c) => {
+      const toBeFlow = c.toBeFlow.map((row, i) =>
+        i === index ? { ...row, ...patch, step: i + 1 } : { ...row, step: i + 1 }
+      );
+      return { ...c, toBeFlow };
+    });
+  }
+
+  protected addToBeRow(): void {
+    this.patchCapabilityCard((c) => {
+      const step = c.toBeFlow.length + 1;
+      return {
+        ...c,
+        toBeFlow: [
+          ...c.toBeFlow,
+          { step, descriptionWithAi: '', change: '', risk: '' }
+        ]
+      };
+    });
+  }
+
+  protected removeToBeRow(index: number): void {
+    this.patchCapabilityCard((c) => {
+      const toBeFlow = c.toBeFlow.filter((_, i) => i !== index).map((row, i) => ({
+        ...row,
+        step: i + 1
+      }));
+      return {
+        ...c,
+        toBeFlow:
+          toBeFlow.length > 0
+            ? toBeFlow
+            : [{ step: 1, descriptionWithAi: '', change: '', risk: '' }]
+      };
+    });
+  }
+
+  protected getAssessmentSummaryLine(id: string): string {
+    const a = this.repository.assessments().find((x) => x.id === id);
+    if (!a) return id;
+    const d = a.finalizedAt ?? a.updatedAt;
+    return `${a.summary || 'Sem resumo'} · ${d.slice(0, 10)}`;
+  }
+
+  private findDimensionCodeForQuestion(questionCode: string): string {
+    for (const dimension of this.catalog().dimensions) {
+      for (const capacity of dimension.capacities) {
+        if (capacity.questions.some((q) => q.code === questionCode)) {
+          return dimension.code;
+        }
+      }
+    }
+    return '';
   }
 
   protected exportJson(): void {
@@ -1040,7 +1674,7 @@ export class App {
     const responses = Object.fromEntries(
       this.getAllQuestions(this.catalog()).map((question) => [
         question.code,
-        { score: null, evidence: '', toolIds: [] }
+        { score: null, practiceDetails: '', evidence: '', toolIds: [] }
       ])
     );
 
@@ -1061,6 +1695,7 @@ export class App {
         questionCode,
         {
           score: response.score,
+          practiceDetails: response.practiceDetails ?? '',
           evidence: response.evidence,
           toolIds: [...response.toolIds]
         }
@@ -1117,14 +1752,24 @@ export class App {
 
   private announce(message: string): void {
     this.feedback.set(message);
-    this.snackBar.open(message, 'Fechar', {
-      duration: 3000,
-      horizontalPosition: 'right',
-      verticalPosition: 'top'
-    });
+    if (this.toastTimer != null) {
+      clearTimeout(this.toastTimer);
+    }
+    this.toastTimer = setTimeout(() => {
+      this.feedback.set('');
+      this.toastTimer = null;
+    }, 4000);
   }
 
-  private viewToIndex(view: 'teams' | 'tools' | 'assessment' | 'results'): number {
+  protected dismissFeedback(): void {
+    if (this.toastTimer != null) {
+      clearTimeout(this.toastTimer);
+      this.toastTimer = null;
+    }
+    this.feedback.set('');
+  }
+
+  private viewToIndex(view: 'teams' | 'tools' | 'assessment' | 'results' | 'capability-cards'): number {
     switch (view) {
       case 'teams':
         return 0;
@@ -1134,10 +1779,14 @@ export class App {
         return 2;
       case 'results':
         return 3;
+      case 'capability-cards':
+        return 4;
     }
   }
 
-  private indexToView(index: number): 'teams' | 'tools' | 'assessment' | 'results' {
+  private indexToView(
+    index: number
+  ): 'teams' | 'tools' | 'assessment' | 'results' | 'capability-cards' {
     switch (index) {
       case 1:
         return 'tools';
@@ -1145,6 +1794,8 @@ export class App {
         return 'assessment';
       case 3:
         return 'results';
+      case 4:
+        return 'capability-cards';
       default:
         return 'teams';
     }
